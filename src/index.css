@@ -1,0 +1,129 @@
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --dominant: #dcd1ff;
+  --accent: #F5D5E0;
+  --grad-start: #dfd4ef;
+  --grad-end: #f8ece1;
+  --text-main: #6b5a5c;
+  --text-muted: #8c7b7d;
+  --border-cute: #dcd1ff;
+}
+
+:root {
+  --dominant: #dcd1ff;
+  --accent: #F5D5E0;
+  --grad-start: #dfd4ef;
+  --grad-end: #f8ece1;
+  --text-main: #6b5a5c;
+  --text-muted: #8c7b7d;
+  --border-cute: #dcd1ff;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color: var(--text-main);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(1.5deg); }
+}
+
+@keyframes float-reverse {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(7px) rotate(-1.5deg); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+@keyframes soft-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.95; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+
+@keyframes bounce-gentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes heart-beat {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.15); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.1); }
+}
+
+@keyframes cute-spin-slow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-float { animation: float 4s ease-in-out infinite; }
+.animate-float-slow { animation: float 7s ease-in-out infinite; }
+.animate-float-rev { animation: float-reverse 5s ease-in-out infinite; }
+.animate-wiggle { animation: wiggle 2s ease-in-out infinite; }
+.animate-soft-pulse { animation: soft-pulse 3s ease-in-out infinite; }
+.animate-bounce-gentle { animation: bounce-gentle 2.5s ease-in-out infinite; }
+.animate-heart-beat { animation: heart-beat 1.8s ease-in-out infinite; }
+.animate-spin-slow { animation: cute-spin-slow 20s linear infinite; }
+
+/* Background pattern with gentle polka dots and soft pastel clouds using user's exact palette */
+.bg-preschool-pattern {
+  background-color: var(--grad-end);
+  background-image: 
+    radial-gradient(var(--dominant) 1.5px, transparent 1.5px),
+    radial-gradient(var(--accent) 1.5px, transparent 1.5px),
+    linear-gradient(135deg, var(--grad-start) 0%, var(--grad-end) 100%);
+  background-size: 32px 32px, 32px 32px, 100% 100%;
+  background-position: 0 0, 16px 16px, 0 0;
+}
+
+/* Cute washi tape styling for preschool cards with user requested pastel purple palette */
+.washi-tape {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1.5deg);
+  width: 74px;
+  height: 20px;
+  background: var(--dominant);
+  box-shadow: 0 2px 4px rgba(220, 209, 255, 0.4);
+  border-left: 2px dashed rgba(255, 255, 255, 0.9);
+  border-right: 2px dashed rgba(255, 255, 255, 0.9);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.washi-tape-purple { background: var(--dominant); }
+.washi-tape-lilac { background: var(--accent); }
+.washi-tape-pink { background: var(--grad-start); }
+
+/* Custom scrollbars with pastel purple touch */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--grad-end);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--dominant);
+  border-radius: 9999px;
+  border: 2px solid var(--grad-end);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--grad-start);
+}
+
+@layer base {
+  body {
+    font-family: 'Quicksand', sans-serif;
+  }
+}

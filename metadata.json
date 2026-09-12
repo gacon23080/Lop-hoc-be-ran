@@ -1,0 +1,6 @@
+{
+  "name": "Mầm Non Rắn Con",
+  "description": "Website Portfolio & Quản Lý Nhân Vật Mầm Non Rắn Con - Vũ trụ sáng tạo của Cô Giáo Chủ Nhiệm Xà nữ bắt chồng",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
