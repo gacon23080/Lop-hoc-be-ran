@@ -71,7 +71,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               </span>
             </div>
             <p className="text-xs text-[var(--text-main)]/80 font-medium hidden sm:block flex items-center gap-1">
-              <span>🍼</span> Vũ trụ ngọt ngào của Cô Giáo Chủ Nhiệm Xà Nữ
+              <span>🍼</span> Vũ trụ ngọt ngào của Rắn
             </p>
           </div>
         </a>

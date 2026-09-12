@@ -18,158 +18,94 @@ export const CuteBabySnake: React.FC<CuteBabySnakeProps> = ({
   return (
     <div className={`relative flex items-center justify-center select-none ${className}`}>
       <svg
-        viewBox="0 0 120 120"
+        viewBox="0 0 200 200"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-full drop-shadow-sm transition-transform duration-300 transform-gpu"
+        className="w-full h-full drop-shadow-md transition-transform duration-300 transform-gpu"
       >
-        <defs>
-          <radialGradient id="headGrad" cx="50%" cy="65%" r="65%">
-            <stop offset="0%" stopColor="#FFFFFF" />
-            <stop offset="35%" stopColor="#F3E8FF" />
-            <stop offset="75%" stopColor="#D8B4E5" />
-            <stop offset="100%" stopColor="#C084FC" />
-          </radialGradient>
-          
-          <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#FFFFFF" />
-            <stop offset="30%" stopColor="#F3E8FF" />
-            <stop offset="70%" stopColor="#D8B4E5" />
-            <stop offset="100%" stopColor="#C084FC" />
-          </linearGradient>
+        {/* Shadow */}
+        <ellipse cx="100" cy="185" rx="65" ry="10" fill="#3B0764" opacity="0.15" />
 
-          <linearGradient id="tailGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#C084FC" />
-            <stop offset="60%" stopColor="#D8B4E5" />
-            <stop offset="100%" stopColor="#FFFFFF" />
-          </linearGradient>
-
-          <filter id="blushBlur" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="3" />
-          </filter>
-        </defs>
-
-        {/* 1. Ground Shadow */}
-        <ellipse cx="60" cy="100" rx="42" ry="7" fill="#3B0764" opacity="0.12" />
-
-        {/* 2. Tail (Behind body) */}
+        {/* Tail (Peeking out from the left) */}
         <path 
-          d="M 65 85 C 85 105, 110 90, 105 75 C 95 85, 75 80, 65 75 Z" 
-          fill="url(#tailGrad)" 
-          stroke="#3B0764" 
-          strokeWidth="1.5" 
+          d="M 45 170 C 10 170 5 130 25 125 C 35 120 30 145 45 150 Z" 
+          fill="#D8B4E5" 
+          stroke="#4C1D95" 
+          strokeWidth="6" 
           strokeLinejoin="round" 
         />
 
-        {/* 3. Main Body */}
+        {/* Body (Perfectly Symmetrical, smooth chubby base) */}
         <path 
-          d="M 45 60 C 35 75, 15 85, 25 102 C 32 112, 65 112, 75 95 C 82 82, 75 60, 75 60 Z" 
-          fill="url(#bodyGrad)" 
-          stroke="#3B0764" 
-          strokeWidth="1.5" 
+          d="M 65 95 C 10 130, 30 185, 100 185 C 170 185, 190 130, 135 95 Z" 
+          fill="#D8B4E5" 
+          stroke="#4C1D95" 
+          strokeWidth="6" 
           strokeLinejoin="round" 
         />
-        {/* Subtle belly highlight */}
-        <path 
-          d="M 42 62 C 34 75, 18 85, 27 100" 
-          fill="none" 
-          stroke="#FFFFFF" 
-          strokeWidth="2" 
-          strokeLinecap="round" 
-          opacity="0.8" 
-        />
 
-        {/* 4. Drop shadow under head onto body */}
+        {/* Belly Patch */}
         <path 
-          d="M 45 66 C 55 72, 65 72, 75 66 C 70 75, 50 75, 45 66 Z" 
-          fill="#3B0764" 
-          opacity="0.15" 
-        />
-
-        {/* 5. Head (Wide Chibi Bell Shape) */}
-        <path 
-          d="M 60 68 C 30 68, 15 55, 20 38 C 25 15, 50 15, 60 15 C 70 15, 95 15, 100 38 C 105 55, 90 68, 60 68 Z" 
-          fill="url(#headGrad)" 
-          stroke="#3B0764" 
-          strokeWidth="1.5" 
+          d="M 78 100 C 65 130, 70 185, 100 185 C 130 185, 135 130, 122 100 Z" 
+          fill="#FAF5FF" 
+          stroke="#4C1D95" 
+          strokeWidth="5" 
           strokeLinejoin="round" 
         />
-        {/* Top of head highlight */}
+
+        {/* Belly Lines */}
+        <path d="M 76 125 Q 100 135 124 125" stroke="#4C1D95" strokeWidth="4" strokeLinecap="round" opacity="0.3" fill="none" />
+        <path d="M 73 145 Q 100 155 127 145" stroke="#4C1D95" strokeWidth="4" strokeLinecap="round" opacity="0.3" fill="none" />
+        <path d="M 76 165 Q 100 172 124 165" stroke="#4C1D95" strokeWidth="4" strokeLinecap="round" opacity="0.3" fill="none" />
+
+        {/* Head (Extra Chubby mochi cheeks!) */}
         <path 
-          d="M 45 20 C 55 16, 65 16, 75 20 C 65 22, 55 22, 45 20 Z" 
-          fill="#FFFFFF" 
-          opacity="0.5" 
+          d="M 100 25 C 135 25, 160 50, 155 85 C 150 115, 125 115, 100 115 C 75 115, 50 115, 45 85 C 40 50, 65 25, 100 25 Z" 
+          fill="#D8B4E5" 
+          stroke="#4C1D95" 
+          strokeWidth="6" 
+          strokeLinejoin="round" 
         />
 
-        {/* 6. Huge Soft Blush */}
-        <circle cx="28" cy="48" r="11" fill="#F472B6" opacity="0.4" filter="url(#blushBlur)" />
-        <circle cx="92" cy="48" r="11" fill="#F472B6" opacity="0.4" filter="url(#blushBlur)" />
+        {/* Blush (Moved slightly outward for plumper cheeks) */}
+        <circle cx="58" cy="85" r="8" fill="#FCA5A5" opacity="0.6" />
+        <circle cx="142" cy="85" r="8" fill="#FCA5A5" opacity="0.6" />
 
-        {/* 7. Nostrils */}
-        <circle cx="56" cy="48" r="0.8" fill="#3B0764" />
-        <circle cx="64" cy="48" r="0.8" fill="#3B0764" />
-
-        {/* 8. Eyes */}
+        {/* Face Expressions */}
         {currentMood === 'loved' ? (
           <g>
-            <path d="M 0 -2 C -3 -6, -7 -3, -7 1 C -7 5, 0 9, 0 9 C 0 9, 7 5, 7 1 C 7 -3, 3 -6, 0 -2 Z" fill="#DB2777" transform="translate(40, 42)" />
-            <path d="M 0 -2 C -3 -6, -7 -3, -7 1 C -7 5, 0 9, 0 9 C 0 9, 7 5, 7 1 C 7 -3, 3 -6, 0 -2 Z" fill="#DB2777" transform="translate(80, 42)" />
+            {/* Simple Heart Eyes */}
+            <path d="M 80 84 L 74 76 A 4.5 4.5 0 0 1 80 71 A 4.5 4.5 0 0 1 86 76 Z" fill="#DB2777" />
+            <path d="M 120 84 L 114 76 A 4.5 4.5 0 0 1 120 71 A 4.5 4.5 0 0 1 126 76 Z" fill="#DB2777" />
+            {/* Happy open mouth */}
+            <path d="M 92 86 Q 100 96 108 86 Z" fill="#F472B6" stroke="#4C1D95" strokeWidth="3" strokeLinejoin="round" />
           </g>
         ) : currentMood === 'star' ? (
           <g>
-            <path d="M 0 -6 L 2 -2 L 6 -2 L 3 1 L 4 5 L 0 3 L -4 5 L -3 1 L -6 -2 L -2 -2 Z" fill="#F59E0B" transform="translate(40, 42)" />
-            <path d="M 0 -6 L 2 -2 L 6 -2 L 3 1 L 4 5 L 0 3 L -4 5 L -3 1 L -6 -2 L -2 -2 Z" fill="#F59E0B" transform="translate(80, 42)" />
+            {/* Simple Star Eyes */}
+            <path d="M 80 68 L 83 75 L 90 76 L 85 81 L 86 88 L 80 84 L 74 88 L 75 81 L 70 76 L 77 75 Z" fill="#F59E0B" />
+            <path d="M 120 68 L 123 75 L 130 76 L 125 81 L 126 88 L 120 84 L 114 88 L 115 81 L 110 76 L 117 75 Z" fill="#F59E0B" />
+            <path d="M 94 88 Q 100 94 106 88" stroke="#4C1D95" strokeWidth="4" strokeLinecap="round" fill="none" />
           </g>
         ) : currentMood === 'milk' ? (
           <g>
-            <path d="M -5 1 Q 0 -4, 5 1" stroke="#3B0764" strokeWidth="2.5" strokeLinecap="round" fill="none" transform="translate(40, 43)" />
-            <path d="M -5 1 Q 0 -4, 5 1" stroke="#3B0764" strokeWidth="2.5" strokeLinecap="round" fill="none" transform="translate(80, 43)" />
+            {/* Content closed eyes */}
+            <path d="M 72 76 Q 80 70 88 76" stroke="#4C1D95" strokeWidth="4" strokeLinecap="round" fill="none" />
+            <path d="M 112 76 Q 120 70 128 76" stroke="#4C1D95" strokeWidth="4" strokeLinecap="round" fill="none" />
+            {/* Milk bottle */}
+            <g transform="translate(100, 92)">
+              <rect x="-6" y="-5" width="12" height="20" rx="4" fill="#FFFFFF" stroke="#4C1D95" strokeWidth="3" />
+              <path d="M -4 -5 L -2 -10 L 2 -10 L 4 -5 Z" fill="#FCD34D" stroke="#4C1D95" strokeWidth="2" strokeLinejoin="round" />
+              <line x1="-6" y1="5" x2="6" y2="5" stroke="#E9D5FF" strokeWidth="2" />
+            </g>
           </g>
         ) : (
           <g>
-            <circle cx="40" cy="42" r="4.5" fill="#1F2937" />
-            <circle cx="39" cy="40.5" r="1.2" fill="#FFFFFF" />
-            <circle cx="80" cy="42" r="4.5" fill="#1F2937" />
-            <circle cx="79" cy="40.5" r="1.2" fill="#FFFFFF" />
-          </g>
-        )}
-
-        {/* 9. Mouth & Tongue */}
-        {currentMood === 'loved' ? (
-          <g>
-            <path d="M 48 51 Q 60 62, 72 51 Z" fill="#F472B6" stroke="#3B0764" strokeWidth="1.5" />
-            <path d="M 54 54 Q 60 60, 66 54 Z" fill="#FB7185" />
-          </g>
-        ) : currentMood === 'milk' ? (
-          <circle cx="60" cy="52" r="2.5" fill="#F472B6" />
-        ) : (
-          <g>
-            {/* Pink Tongue hanging out */}
-            <path d="M 57 51 C 57 62, 59 66, 60 66 C 61 66, 63 62, 63 51 Z" fill="#F472B6" stroke="#3B0764" strokeWidth="1.2" />
-            {/* Tongue split line */}
-            <line x1="60" y1="53" x2="60" y2="62" stroke="#3B0764" strokeWidth="1" />
-            {/* W shaped mouth drawn over top */}
-            <path d="M 46 51 Q 53 56, 60 51 Q 67 56, 74 51" fill="none" stroke="#3B0764" strokeWidth="1.5" strokeLinecap="round" />
-          </g>
-        )}
-
-        {/* 10. Accessories */}
-        {/* Milk Bottle when mood is milk */}
-        {currentMood === 'milk' && (
-           <g transform="translate(56, 56) rotate(-20)">
-             <rect x="-6" y="0" width="12" height="18" rx="3" fill="#FFFFFF" stroke="#D8B4E5" strokeWidth="1.5" />
-             <rect x="-4" y="-3" width="8" height="4" rx="1" fill="#FDE047" />
-             <path d="M -2 -3 L -2 -5 L 2 -5 L 2 -3 Z" fill="#FB923C" />
-             <line x1="-5" y1="12" x2="5" y2="12" stroke="#E9D5FF" strokeWidth="1.5" />
-           </g>
-        )}
-        
-        {/* Star Ribbon for Star mood */}
-        {currentMood === 'star' && (
-          <g transform="translate(75, 22) rotate(20)">
-            <ellipse cx="-6" cy="0" rx="7" ry="4" fill="#F472B6" transform="rotate(-20 -6 0)" />
-            <ellipse cx="6" cy="0" rx="7" ry="4" fill="#F472B6" transform="rotate(20 6 0)" />
-            <circle cx="0" cy="0" r="3.5" fill="#FDE047" />
+            {/* Default: Simple solid dot eyes (No sparkles) */}
+            <circle cx="80" cy="76" r="5" fill="#1F0033" />
+            <circle cx="120" cy="76" r="5" fill="#1F0033" />
+            {/* Simple smile */}
+            <path d="M 94 86 Q 100 92 106 86" stroke="#1F0033" strokeWidth="4" strokeLinecap="round" fill="none" />
           </g>
         )}
       </svg>
