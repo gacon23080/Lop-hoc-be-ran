@@ -301,10 +301,10 @@ export const CharacterSection: React.FC<CharacterSectionProps> = ({
                     <div className="bg-[var(--grad-end)] p-2.5 rounded-2xl mb-3 text-xs text-[var(--text-main)]/80 border border-[var(--dominant)]/50 flex flex-col gap-1">
                       <div className="flex items-center justify-between">
                         <span className="text-[11px] font-semibold text-[var(--text-main)] flex items-center gap-1">
-                          <span>🍼</span> Món ăn xế:
+                          <span>🧸</span> Thích:
                         </span>
                         <span className="font-bold text-[var(--text-main)] text-[11px] truncate max-w-[140px]">
-                          {char.favoriteSnack || 'Sữa ấm & bánh quy'}
+                          {char.likes || 'Sữa ấm & bánh quy'}
                         </span>
                       </div>
                       <div className="flex items-center justify-between">
@@ -312,7 +312,7 @@ export const CharacterSection: React.FC<CharacterSectionProps> = ({
                           <span>⭐</span> Điểm bé ngoan:
                         </span>
                         <span className="font-bold text-[var(--text-main)] text-[11px]">
-                          {char.goodKidScore || 10}/10 sao
+                          {char.obedienceRate || 10}/10 sao
                         </span>
                       </div>
                     </div>

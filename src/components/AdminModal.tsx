@@ -139,7 +139,6 @@ export const AdminModal: React.FC<AdminModalProps> = ({
       dislikes: 'Bị bạn giấu đồ chơi',
       obedienceRate: 95,
       likesCount: 0,
-      bestFriends: ['Bé Bạch Tiểu Ngân'],
       fullBio: 'Bé rắn mới chuyển tới lớp Mầm Non Rắn Con.',
       badgeLabel: 'Bé Mới Đến'
     });
@@ -1157,7 +1156,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
 
                 <div>
                   <label className="block text-xs font-bold text-[var(--text-main)] mb-1">
-                    Món thích & Món sợ
+                    Thích & Ghét
                   </label>
                   <div className="grid grid-cols-2 gap-2">
                     <input

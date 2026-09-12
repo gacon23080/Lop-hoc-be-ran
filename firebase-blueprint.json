@@ -21,7 +21,6 @@
         "dislikes": { "type": "string" },
         "obedienceRate": { "type": "number" },
         "likesCount": { "type": "number" },
-        "bestFriends": { "type": "array" },
         "fullBio": { "type": "string" },
         "badgeLabel": { "type": "string" }
       },

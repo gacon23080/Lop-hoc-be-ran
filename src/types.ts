@@ -15,7 +15,6 @@ export interface Character {
   dislikes: string; // e.g. "Uống thuốc đắng, dậy sớm"
   obedienceRate: number; // 0 - 100%
   likesCount: number;
-  bestFriends: string[];
   fullBio: string;
   badgeLabel?: string; // e.g. "Bé Ngoan Tuần Này", "Cây Hài Của Lớp"
 }

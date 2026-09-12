@@ -24,199 +24,119 @@ export const CuteBabySnake: React.FC<CuteBabySnakeProps> = ({
         className="w-full h-full drop-shadow-sm transition-transform duration-300 transform-gpu"
       >
         <defs>
-          {/* Main Snake Purple Pastel Gradients */}
-          <linearGradient id="snakeSkin" x1="20" y1="20" x2="100" y2="105" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#E9D5FF" />
-            <stop offset="45%" stopColor="#D8B4E5" />
-            <stop offset="100%" stopColor="var(--dominant)" />
+          <linearGradient id="snakeSkin" x1="0" y1="20" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#FAF5FF" />
+            <stop offset="50%" stopColor="#dcd1ff" />
+            <stop offset="100%" stopColor="#C084FC" />
           </linearGradient>
-
-          <linearGradient id="snakeBelly" x1="40" y1="50" x2="80" y2="100" gradientUnits="userSpaceOnUse">
+          <linearGradient id="snakeSkinDark" x1="0" y1="40" x2="100" y2="120" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#dcd1ff" />
+            <stop offset="50%" stopColor="#C084FC" />
+            <stop offset="100%" stopColor="#9333EA" />
+          </linearGradient>
+          <linearGradient id="snakeSkinLight" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
             <stop offset="0%" stopColor="#FFFFFF" />
-            <stop offset="50%" stopColor="#F3E8FF" />
-            <stop offset="100%" stopColor="#E9D5FF" />
-          </linearGradient>
-
-          <linearGradient id="ribbonGrad" x1="0" y1="0" x2="30" y2="30" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#F472B6" />
-            <stop offset="100%" stopColor="#DB2777" />
-          </linearGradient>
-
-          <linearGradient id="blushGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#F472B6" stopOpacity="0.75" />
-            <stop offset="100%" stopColor="#FB7185" stopOpacity="0.4" />
+            <stop offset="40%" stopColor="#FAF5FF" />
+            <stop offset="100%" stopColor="#dcd1ff" />
           </linearGradient>
         </defs>
 
-        {/* Coiled Tail & Lower Body (Base) */}
-        <path
-          d="M32 94 C 22 96, 18 84, 26 76 C 35 68, 50 78, 62 82 C 78 86, 96 85, 102 75 C 108 65, 98 56, 92 60 C 86 64, 88 74, 94 76"
-          stroke="url(#snakeSkin)"
-          strokeWidth="16"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+        {/* 1. Base Shadow */}
+        <ellipse cx="60" cy="105" rx="55" ry="10" fill="var(--dominant)" opacity="0.3" />
 
-        {/* Tail Tip with Cute Swirl */}
-        <path
-          d="M96 74 C 104 76, 108 86, 98 94 C 90 99, 78 98, 70 96 C 56 94, 42 96, 30 94"
-          stroke="url(#snakeSkin)"
-          strokeWidth="13"
-          strokeLinecap="round"
-        />
-
-        {/* Underbelly Stripes on Tail */}
-        <path
-          d="M48 83 Q 54 80, 60 84"
-          stroke="#FAF5FF"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-        />
-        <path
-          d="M68 85 Q 74 82, 80 86"
-          stroke="#FAF5FF"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-        />
-        <path
-          d="M86 80 Q 90 77, 94 82"
-          stroke="#FAF5FF"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-
-        {/* Chubby Snake Head & Upper Body */}
-        {/* Upper Body Neck */}
-        <ellipse cx="60" cy="74" rx="20" ry="17" fill="url(#snakeSkin)" />
+        {/* 2. Base Pancake Coil (Bottom layer) */}
+        <ellipse cx="60" cy="88" rx="55" ry="22" fill="url(#snakeSkinDark)" />
         
-        {/* Belly Patch (Soft Tummy) */}
-        <ellipse cx="60" cy="77" rx="13" ry="12" fill="url(#snakeBelly)" />
-        <path d="M52 72 Q 60 75, 68 72" stroke="#D8B4E5" strokeWidth="1.8" strokeLinecap="round" />
-        <path d="M53 78 Q 60 81, 67 78" stroke="#D8B4E5" strokeWidth="1.8" strokeLinecap="round" />
-        <path d="M55 84 Q 60 87, 65 84" stroke="#D8B4E5" strokeWidth="1.8" strokeLinecap="round" />
+        {/* Base Details/Scales */}
+        <path d="M 25 98 Q 30 100, 35 98" stroke="#FFFFFF" strokeWidth="3.5" strokeLinecap="round" opacity="0.6"/>
+        <path d="M 45 103 Q 50 105, 55 103" stroke="#FFFFFF" strokeWidth="3.5" strokeLinecap="round" opacity="0.6"/>
+        <path d="M 65 103 Q 70 105, 75 103" stroke="#FFFFFF" strokeWidth="3.5" strokeLinecap="round" opacity="0.6"/>
+        <path d="M 85 98 Q 90 100, 95 98" stroke="#FFFFFF" strokeWidth="3.5" strokeLinecap="round" opacity="0.6"/>
 
-        {/* Chubby Round Head */}
-        <circle cx="60" cy="46" r="27" fill="url(#snakeSkin)" />
+        {/* 3. Back Ring Part (Behind head) */}
+        <path d="M 15 75 C 10 40, 110 40, 105 75 C 90 60, 30 60, 15 75 Z" fill="url(#snakeSkin)" />
 
-        {/* Cute Baby Cheeks (Blushing) */}
-        <ellipse cx="41" cy="54" rx="6" ry="3.8" fill="url(#blushGrad)" />
-        <ellipse cx="79" cy="54" rx="6" ry="3.8" fill="url(#blushGrad)" />
-        {/* Cheek blush sparkles */}
-        <circle cx="40" cy="53" r="1" fill="#FFFFFF" />
-        <circle cx="80" cy="53" r="1" fill="#FFFFFF" />
+        {/* Inner hole shadow where head rests */}
+        <ellipse cx="60" cy="72" rx="35" ry="12" fill="#7E22CE" opacity="0.15" />
 
-        {/* EYES: Rendered according to mood */}
+        {/* 4. The Head */}
+        <path d="M 35 68 C 30 35, 90 35, 85 68 C 80 82, 40 82, 35 68 Z" fill="url(#snakeSkinLight)" />
+
+        {/* 5. Front Ring Part (Wraps over head base) */}
+        <path d="M 10 75 C 5 105, 115 105, 110 75 C 100 55, 80 80, 60 80 C 40 80, 20 55, 10 75 Z" fill="url(#snakeSkin)" />
+        
+        {/* Front Ring Highlights/Scales */}
+        <path d="M 20 80 Q 25 82, 30 80" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" opacity="0.7"/>
+        <path d="M 90 80 Q 85 82, 80 80" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" opacity="0.7"/>
+        <path d="M 10 75 C 5 105, 115 105, 110 75" fill="none" stroke="#FFFFFF" strokeWidth="2" opacity="0.4" />
+
+        {/* 6. Face Details */}
+        {/* Forehead Crescent Moon */}
+        <path d="M 57 48 A 3.5 3.5 0 1 1 63 48 A 4.5 4.5 0 1 0 57 48 Z" fill="#F472B6" opacity="0.85" />
+        
+        {/* Blush */}
+        <ellipse cx="40" cy="58" rx="6" ry="4" fill="#F472B6" opacity="0.4" />
+        <ellipse cx="80" cy="58" rx="6" ry="4" fill="#F472B6" opacity="0.4" />
+
+        {/* Eyes based on mood */}
         {currentMood === 'loved' ? (
-          /* Heart Eyes when patted! */
           <g>
-            <path
-              d="M48 42 C 48 37, 43 35, 41 38 C 39 35, 34 37, 34 42 C 34 47, 41 51, 41 51 C 41 51, 48 47, 48 42 Z"
-              fill="#DB2777"
-            />
-            <path
-              d="M86 42 C 86 37, 81 35, 79 38 C 77 35, 72 37, 72 42 C 72 47, 79 51, 79 51 C 79 51, 86 47, 86 42 Z"
-              fill="#DB2777"
-            />
-            <circle cx="43" cy="39" r="1.5" fill="#FFFFFF" />
-            <circle cx="81" cy="39" r="1.5" fill="#FFFFFF" />
+            <path d="M0 -3 C -3 -6, -6 -3, -6 0 C -6 4, 0 8, 0 8 C 0 8, 6 4, 6 0 C 6 -3, 3 -6, 0 -3 Z" fill="#DB2777" transform="translate(46, 54) scale(0.9)"/>
+            <path d="M0 -3 C -3 -6, -6 -3, -6 0 C -6 4, 0 8, 0 8 C 0 8, 6 4, 6 0 C 6 -3, 3 -6, 0 -3 Z" fill="#DB2777" transform="translate(74, 54) scale(0.9)"/>
           </g>
         ) : currentMood === 'star' ? (
-          /* Star Eyes when awarded flower */
           <g>
-            <path
-              d="M41 37 L 43 43 L 49 43 L 44 47 L 46 53 L 41 49 L 36 53 L 38 47 L 33 43 L 39 43 Z"
-              fill="#F59E0B"
-            />
-            <path
-              d="M79 37 L 81 43 L 87 43 L 82 47 L 84 53 L 79 49 L 74 53 L 76 47 L 71 43 L 77 43 Z"
-              fill="#F59E0B"
-            />
+            <path d="M0 -5 L 1.5 -1.5 L 5 -1.5 L 2 1 L 3 5 L 0 2.5 L -3 5 L -2 1 L -5 -1.5 L -1.5 -1.5 Z" fill="#F59E0B" transform="translate(46, 54) scale(1)"/>
+            <path d="M0 -5 L 1.5 -1.5 L 5 -1.5 L 2 1 L 3 5 L 0 2.5 L -3 5 L -2 1 L -5 -1.5 L -1.5 -1.5 Z" fill="#F59E0B" transform="translate(74, 54) scale(1)"/>
           </g>
         ) : currentMood === 'milk' ? (
-          /* Blissful closed curve eyes when drinking warm milk */
           <g>
-            <path d="M36 46 Q 42 39, 48 46" stroke="#3B0764" strokeWidth="3.2" strokeLinecap="round" fill="none" />
-            <path d="M72 46 Q 78 39, 84 46" stroke="#3B0764" strokeWidth="3.2" strokeLinecap="round" fill="none" />
+            <path d="M -4 1 Q 0 -4, 4 1" stroke="#3B0764" strokeWidth="2.5" strokeLinecap="round" fill="none" transform="translate(46, 55)"/>
+            <path d="M -4 1 Q 0 -4, 4 1" stroke="#3B0764" strokeWidth="2.5" strokeLinecap="round" fill="none" transform="translate(74, 55)"/>
           </g>
         ) : (
-          /* Standard Hyper-Cute Large Anime Eyes with Twinkle */
           <g>
             {/* Left Eye */}
-            <ellipse cx="44" cy="45" rx="6.5" ry="8" fill="#3B0764" />
-            <ellipse cx="42" cy="42.5" rx="2.8" ry="3.8" fill="#FFFFFF" />
-            <circle cx="46.5" cy="48" r="1.6" fill="#FFFFFF" />
-            <circle cx="42" cy="49" r="0.9" fill="#E9D5FF" />
-
+            <ellipse cx="46" cy="54" rx="4.5" ry="6" fill="#3B0764" transform="rotate(10 46 54)" />
+            <circle cx="44.5" cy="52" r="1.5" fill="#FFFFFF" />
+            <circle cx="47.5" cy="56" r="0.8" fill="#F472B6" />
             {/* Right Eye */}
-            <ellipse cx="76" cy="45" rx="6.5" ry="8" fill="#3B0764" />
-            <ellipse cx="74" cy="42.5" rx="2.8" ry="3.8" fill="#FFFFFF" />
-            <circle cx="78.5" cy="48" r="1.6" fill="#FFFFFF" />
-            <circle cx="74" cy="49" r="0.9" fill="#E9D5FF" />
+            <ellipse cx="74" cy="54" rx="4.5" ry="6" fill="#3B0764" transform="rotate(-10 74 54)" />
+            <circle cx="72.5" cy="52" r="1.5" fill="#FFFFFF" />
+            <circle cx="75.5" cy="56" r="0.8" fill="#F472B6" />
           </g>
         )}
 
-        {/* Sweet Kitten Smile or Blep */}
-        {currentMood === 'loved' ? (
-          /* Wide joyful open smile */
+        {/* The signature blep tongue flopping over the front coil */}
+        {(currentMood === 'happy' || currentMood === 'loved') && (
           <g>
-            <path
-              d="M54 53 Q 60 62, 66 53"
-              stroke="#581C87"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              fill="#F472B6"
-            />
-            {/* Little tongue blep */}
-            <path d="M57 56 Q 60 61, 63 56" fill="#FB7185" />
+            <path d="M 54 66 C 45 85, 30 75, 22 82" fill="none" stroke="#F472B6" strokeWidth="3" strokeLinecap="round" />
+            <path d="M 22 82 L 19 80 M 22 82 L 21 85" stroke="#F472B6" strokeWidth="2.5" strokeLinecap="round" />
           </g>
-        ) : currentMood === 'milk' ? (
-          /* Sucking milk mouth */
-          <g>
-            <circle cx="60" cy="55" r="3.2" fill="#581C87" />
-            <circle cx="60" cy="55" r="2" fill="#F472B6" />
-          </g>
+        )}
+
+        {/* Small mouth curve */}
+        {currentMood === 'milk' ? (
+          <circle cx="60" cy="62" r="2.5" fill="#F472B6" />
         ) : (
-          /* Cute gentle kitty mouth (3 or w) */
-          <path
-            d="M53 53 Q 56.5 57, 60 54 Q 63.5 57, 67 53"
-            stroke="#4A154B"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            fill="none"
-          />
+          <path d="M 56 64 Q 60 67, 64 64" stroke="#4A154B" strokeWidth="2" strokeLinecap="round" fill="none" />
         )}
-
-        {/* Little Preschool Yellow Star Clip or Ribbon Bow on Head */}
-        <g transform="translate(68, 20) rotate(15)">
-          {/* Bow Left Loop */}
-          <ellipse cx="5" cy="8" rx="6" ry="4" fill="url(#ribbonGrad)" transform="rotate(-25 5 8)" />
-          {/* Bow Right Loop */}
-          <ellipse cx="15" cy="8" rx="6" ry="4" fill="url(#ribbonGrad)" transform="rotate(25 15 8)" />
-          {/* Bow Center Knot */}
-          <circle cx="10" cy="8" r="3" fill="#F43F5E" />
-          {/* Yellow Star in Center of Ribbon */}
-          <path
-            d="M10 5.5 L 10.8 7.2 L 12.6 7.2 L 11.2 8.3 L 11.7 10 L 10 9 L 8.3 10 L 8.8 8.3 L 7.4 7.2 L 9.2 7.2 Z"
-            fill="#FDE047"
-          />
-        </g>
-
-        {/* Little Baby Milk Bottle accessory when mood is milk */}
+        
+        {/* Milk Bottle when mood is milk */}
         {currentMood === 'milk' && (
-          <g transform="translate(62, 58) rotate(-15)">
-            <rect x="0" y="4" width="10" height="15" rx="3" fill="#FFFFFF" stroke="#D8B4E5" strokeWidth="1.5" />
-            <rect x="2" y="1" width="6" height="3" rx="1" fill="#FDE047" />
-            <circle cx="5" cy="0" r="1.5" fill="#FB923C" />
-            <line x1="2" y1="10" x2="8" y2="10" stroke="#E9D5FF" strokeWidth="1.5" />
-          </g>
+           <g transform="translate(55, 68) rotate(-20)">
+             <rect x="-6" y="0" width="12" height="18" rx="3" fill="#FFFFFF" stroke="#D8B4E5" strokeWidth="2" />
+             <rect x="-4" y="-3" width="8" height="4" rx="1" fill="#FDE047" />
+             <path d="M -2 -3 L -2 -5 L 2 -5 L 2 -3 Z" fill="#FB923C" />
+             <line x1="-5" y1="12" x2="5" y2="12" stroke="#E9D5FF" strokeWidth="2" />
+           </g>
         )}
 
-        {/* Small floating sparkles / bubbles around head */}
-        <circle cx="28" cy="35" r="1.5" fill="#FDE047" />
-        <path d="M28 32 L 29 35 L 32 35 L 29.5 37 L 30.5 40 L 28 38 L 25.5 40 L 26.5 37 L 24 35 L 27 35 Z" fill="#FDE047" transform="scale(0.5) translate(28, 30)" />
-        <circle cx="94" cy="38" r="1.8" fill="#F472B6" />
-        <circle cx="98" cy="34" r="1" fill="#FFFFFF" />
-
+        {/* Little floating sparkles */}
+        <circle cx="20" cy="30" r="2" fill="#FDE047" />
+        <path d="M14 27 L 15 30 L 18 30 L 15.5 32 L 16.5 35 L 14 33 L 11.5 35 L 12.5 32 L 10 30 L 13 30 Z" fill="#FDE047" transform="scale(0.6) translate(15, 45)" />
+        <circle cx="95" cy="25" r="2" fill="#F472B6" />
+        <circle cx="100" cy="32" r="1.5" fill="#FFFFFF" />
       </svg>
     </div>
   );

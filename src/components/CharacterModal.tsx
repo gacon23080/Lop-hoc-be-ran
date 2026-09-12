@@ -177,34 +177,15 @@ export const CharacterModal: React.FC<CharacterModalProps> = ({
                 {character.personality}
               </p>
             </div>
-
             <div className="bg-[var(--grad-end)] p-4 rounded-2xl border border-[var(--dominant)]/50">
               <span className="text-xs font-bold text-[var(--text-main)] block mb-1 flex items-center gap-1">
-                <Cookie className="w-3.5 h-3.5 text-[var(--text-main)]" /> Món ăn xế & Nỗi sợ nhí:
+                <Cookie className="w-3.5 h-3.5 text-[var(--text-main)]" /> Thích & Ghét:
               </span>
               <p className="text-xs text-[var(--text-main)]/90 leading-relaxed">
-                <strong>Món khoái khẩu:</strong> {character.likes}
+                <strong>Thích:</strong> {character.likes}
                 <br />
-                <strong>Bé sợ nhất:</strong> {character.dislikes}
+                <strong>Ghét:</strong> {character.dislikes}
               </p>
-            </div>
-          </div>
-
-          {/* Best Friends in Class */}
-          <div className="bg-white/80 p-4 rounded-2xl border border-[var(--dominant)]/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <Users className="w-4 h-4 text-[var(--text-main)]" />
-              <span className="text-xs font-bold text-[var(--text-main)]">Bạn thân cùng bàn lớp mầm:</span>
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              {character.bestFriends.map((friend, idx) => (
-                <span
-                  key={idx}
-                  className="px-2.5 py-1 rounded-full bg-[var(--grad-end)] text-[var(--text-main)] text-xs font-semibold border border-[var(--dominant)]"
-                >
-                  {friend}
-                </span>
-              ))}
             </div>
           </div>
 
