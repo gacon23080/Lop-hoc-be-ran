@@ -1,0 +1,118 @@
+{
+  "entities": {
+    "Character": {
+      "title": "Character",
+      "description": "A snake character profile",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "nickname": { "type": "string" },
+        "title": { "type": "string" },
+        "gender": { "type": "string" },
+        "age": { "type": "string" },
+        "avatarUrl": { "type": "string" },
+        "youtubeMusicUrl": { "type": "string" },
+        "customLinkUrl": { "type": "string" },
+        "customLinkName": { "type": "string" },
+        "tags": { "type": "array" },
+        "personality": { "type": "string" },
+        "likes": { "type": "string" },
+        "dislikes": { "type": "string" },
+        "obedienceRate": { "type": "number" },
+        "likesCount": { "type": "number" },
+        "bestFriends": { "type": "array" },
+        "fullBio": { "type": "string" },
+        "badgeLabel": { "type": "string" }
+      },
+      "required": ["id", "name"]
+    },
+    "BulletinPost": {
+      "title": "BulletinPost",
+      "description": "An announcement on the class board",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "title": { "type": "string" },
+        "subtitle": { "type": "string" },
+        "content": { "type": "array" },
+        "updatedAt": { "type": "string" },
+        "icon": { "type": "string" },
+        "badgeText": { "type": "string" },
+        "customLinkUrl": { "type": "string" },
+        "customLinkName": { "type": "string" }
+      },
+      "required": ["id", "title"]
+    },
+    "CreatorProfile": {
+      "title": "CreatorProfile",
+      "description": "Profile of the teacher/admin",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "penName": { "type": "string" },
+        "title": { "type": "string" },
+        "badge": { "type": "string" },
+        "avatarUrl": { "type": "string" },
+        "facebookUrl": { "type": "string" },
+        "bio": { "type": "string" },
+        "classMotto": { "type": "string" },
+        "totalStudents": { "type": "number" },
+        "establishedDate": { "type": "string" }
+      }
+    },
+    "InboxMessage": {
+      "title": "InboxMessage",
+      "description": "Anonymous message",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "senderName": { "type": "string" },
+        "content": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "likesCount": { "type": "number" },
+        "status": { "type": "string" },
+        "reply": { "type": "string" },
+        "repliedAt": { "type": "string" },
+        "targetCharId": { "type": "string" }
+      }
+    },
+    "StickyNote": {
+      "title": "StickyNote",
+      "description": "Sticky note on the wall",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "author": { "type": "string" },
+        "content": { "type": "string" },
+        "color": { "type": "string" },
+        "rotationDeg": { "type": "number" },
+        "likes": { "type": "number" },
+        "createdAt": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "characters/{characterId}": {
+      "schema": { "$ref": "#/entities/Character" },
+      "description": "Snake characters"
+    },
+    "bulletinPosts/{postId}": {
+      "schema": { "$ref": "#/entities/BulletinPost" },
+      "description": "Class announcements"
+    },
+    "config/creatorProfile": {
+      "schema": { "$ref": "#/entities/CreatorProfile" },
+      "description": "Global teacher profile"
+    },
+    "inboxMessages/{messageId}": {
+      "schema": { "$ref": "#/entities/InboxMessage" },
+      "description": "User submitted inbox messages"
+    },
+    "stickyNotes/{noteId}": {
+      "schema": { "$ref": "#/entities/StickyNote" },
+      "description": "User submitted sticky notes"
+    }
+  }
+}

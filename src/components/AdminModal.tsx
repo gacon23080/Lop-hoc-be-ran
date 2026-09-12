@@ -105,10 +105,10 @@ export const AdminModal: React.FC<AdminModalProps> = ({
     setTimeout(() => setToastMessage(null), 3000);
   };
 
-  // Handle password submission (exact password: "2308")
+  // Handle password submission
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (passwordInput.trim() === '2308') {
+    if (passwordInput.trim() === 'khanhvi23082010') {
       sound.playChime('admin');
       setLoginError(false);
       setPasswordInput('');

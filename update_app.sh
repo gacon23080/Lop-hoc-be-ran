@@ -1,3 +1,5 @@
+#!/bin/bash
+cat << 'APP' > src/App.tsx
 import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { HeroCreator } from './components/HeroCreator';
@@ -243,3 +245,4 @@ export default function App() {
     </div>
   );
 }
+APP
