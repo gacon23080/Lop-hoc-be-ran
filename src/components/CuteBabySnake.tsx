@@ -58,6 +58,10 @@ export const CuteBabySnake: React.FC<CuteBabySnakeProps> = ({
         <path d="M 73 145 Q 100 155 127 145" stroke="#4C1D95" strokeWidth="4" strokeLinecap="round" opacity="0.3" fill="none" />
         <path d="M 76 165 Q 100 172 124 165" stroke="#4C1D95" strokeWidth="4" strokeLinecap="round" opacity="0.3" fill="none" />
 
+        {/* Baby Bib (Yếm em bé) */}
+        <path d="M 65 110 C 65 135, 135 135, 135 110 Z" fill="#FEF08A" stroke="#4C1D95" strokeWidth="4" strokeLinejoin="round" />
+        <path d="M 65 110 C 80 120, 120 120, 135 110" fill="none" stroke="#FDE047" strokeWidth="4" />
+
         {/* Head (Super Chubby mochi cheeks!) */}
         <path 
           d="M 100 25 C 135 25, 165 50, 160 85 C 155 118, 125 115, 100 115 C 75 115, 45 118, 40 85 C 35 50, 65 25, 100 25 Z" 
@@ -67,33 +71,36 @@ export const CuteBabySnake: React.FC<CuteBabySnakeProps> = ({
           strokeLinejoin="round" 
         />
 
-        {/* Blush (Moved slightly outward for plumper cheeks) */}
-        <circle cx="54" cy="85" r="8" fill="#FCA5A5" opacity="0.6" />
-        <circle cx="146" cy="85" r="8" fill="#FCA5A5" opacity="0.6" />
+        {/* Baby Hair Curl (Tóc mầm cây ngố xíu) */}
+        <path d="M 100 25 C 95 10, 115 5, 110 15 C 105 25, 100 25, 100 25" fill="none" stroke="#4C1D95" strokeWidth="4" strokeLinecap="round" />
+
+        {/* Blush (Oval and moved down for chibi look) */}
+        <ellipse cx="54" cy="92" rx="10" ry="6" fill="#FCA5A5" opacity="0.6" />
+        <ellipse cx="146" cy="92" rx="10" ry="6" fill="#FCA5A5" opacity="0.6" />
 
         {/* Face Expressions */}
         {currentMood === 'loved' ? (
           <g>
             {/* Simple Heart Eyes */}
-            <path d="M 80 84 L 74 76 A 4.5 4.5 0 0 1 80 71 A 4.5 4.5 0 0 1 86 76 Z" fill="#DB2777" />
-            <path d="M 120 84 L 114 76 A 4.5 4.5 0 0 1 120 71 A 4.5 4.5 0 0 1 126 76 Z" fill="#DB2777" />
+            <path d="M 76 94 L 70 86 A 4.5 4.5 0 0 1 76 81 A 4.5 4.5 0 0 1 82 86 Z" fill="#DB2777" />
+            <path d="M 124 94 L 118 86 A 4.5 4.5 0 0 1 124 81 A 4.5 4.5 0 0 1 130 86 Z" fill="#DB2777" />
             {/* Happy open mouth */}
-            <path d="M 92 86 Q 100 96 108 86 Z" fill="#F472B6" stroke="#4C1D95" strokeWidth="3" strokeLinejoin="round" />
+            <path d="M 94 92 Q 100 102 106 92 Z" fill="#F472B6" stroke="#4C1D95" strokeWidth="3" strokeLinejoin="round" />
           </g>
         ) : currentMood === 'star' ? (
           <g>
             {/* Simple Star Eyes */}
-            <path d="M 80 68 L 83 75 L 90 76 L 85 81 L 86 88 L 80 84 L 74 88 L 75 81 L 70 76 L 77 75 Z" fill="#F59E0B" />
-            <path d="M 120 68 L 123 75 L 130 76 L 125 81 L 126 88 L 120 84 L 114 88 L 115 81 L 110 76 L 117 75 Z" fill="#F59E0B" />
-            <path d="M 94 88 Q 100 94 106 88" stroke="#4C1D95" strokeWidth="4" strokeLinecap="round" fill="none" />
+            <path d="M 76 78 L 79 85 L 86 86 L 81 91 L 82 98 L 76 94 L 70 98 L 71 91 L 66 86 L 73 85 Z" fill="#F59E0B" />
+            <path d="M 124 78 L 127 85 L 134 86 L 129 91 L 130 98 L 124 94 L 118 98 L 119 91 L 114 86 L 121 85 Z" fill="#F59E0B" />
+            <path d="M 94 96 Q 100 102 106 96" stroke="#4C1D95" strokeWidth="4" strokeLinecap="round" fill="none" />
           </g>
         ) : currentMood === 'milk' ? (
           <g>
             {/* Content closed eyes */}
-            <path d="M 72 76 Q 80 70 88 76" stroke="#4C1D95" strokeWidth="4" strokeLinecap="round" fill="none" />
-            <path d="M 112 76 Q 120 70 128 76" stroke="#4C1D95" strokeWidth="4" strokeLinecap="round" fill="none" />
+            <path d="M 68 86 Q 76 80 84 86" stroke="#4C1D95" strokeWidth="4" strokeLinecap="round" fill="none" />
+            <path d="M 116 86 Q 124 80 132 86" stroke="#4C1D95" strokeWidth="4" strokeLinecap="round" fill="none" />
             {/* Milk bottle */}
-            <g transform="translate(100, 92)">
+            <g transform="translate(100, 100)">
               <rect x="-6" y="-5" width="12" height="20" rx="4" fill="#FFFFFF" stroke="#4C1D95" strokeWidth="3" />
               <path d="M -4 -5 L -2 -10 L 2 -10 L 4 -5 Z" fill="#FCD34D" stroke="#4C1D95" strokeWidth="2" strokeLinejoin="round" />
               <line x1="-6" y1="5" x2="6" y2="5" stroke="#E9D5FF" strokeWidth="2" />
@@ -101,11 +108,14 @@ export const CuteBabySnake: React.FC<CuteBabySnakeProps> = ({
           </g>
         ) : (
           <g>
-            {/* Default: Simple solid dot eyes (No sparkles) */}
-            <circle cx="80" cy="76" r="5" fill="#1F0033" />
-            <circle cx="120" cy="76" r="5" fill="#1F0033" />
-            {/* Simple smile */}
-            <path d="M 94 86 Q 100 92 106 86" stroke="#1F0033" strokeWidth="4" strokeLinecap="round" fill="none" />
+            {/* Default: Simple solid dot eyes (No sparkles), moved wider and lower */}
+            <circle cx="74" cy="86" r="7.5" fill="#1F0033" />
+            <circle cx="126" cy="86" r="7.5" fill="#1F0033" />
+            
+            {/* Cute Pacifier instead of mouth for extra baby look */}
+            <circle cx="100" cy="94" r="12" fill="#FBCFE8" stroke="#4C1D95" strokeWidth="3" />
+            <circle cx="100" cy="94" r="5" fill="#FFFFFF" stroke="#4C1D95" strokeWidth="2" />
+            <path d="M 88 94 A 12 12 0 0 0 112 94" fill="none" stroke="#4C1D95" strokeWidth="2" strokeLinecap="round" opacity="0.3" />
           </g>
         )}
       </svg>
