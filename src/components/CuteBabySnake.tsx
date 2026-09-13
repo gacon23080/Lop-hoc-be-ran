@@ -58,9 +58,9 @@ export const CuteBabySnake: React.FC<CuteBabySnakeProps> = ({
         <path d="M 73 145 Q 100 155 127 145" stroke="#4C1D95" strokeWidth="4" strokeLinecap="round" opacity="0.3" fill="none" />
         <path d="M 76 165 Q 100 172 124 165" stroke="#4C1D95" strokeWidth="4" strokeLinecap="round" opacity="0.3" fill="none" />
 
-        {/* Head (Extra Chubby mochi cheeks!) */}
+        {/* Head (Super Chubby mochi cheeks!) */}
         <path 
-          d="M 100 25 C 135 25, 160 50, 155 85 C 150 115, 125 115, 100 115 C 75 115, 50 115, 45 85 C 40 50, 65 25, 100 25 Z" 
+          d="M 100 25 C 135 25, 165 50, 160 85 C 155 118, 125 115, 100 115 C 75 115, 45 118, 40 85 C 35 50, 65 25, 100 25 Z" 
           fill="#D8B4E5" 
           stroke="#4C1D95" 
           strokeWidth="6" 
@@ -68,8 +68,8 @@ export const CuteBabySnake: React.FC<CuteBabySnakeProps> = ({
         />
 
         {/* Blush (Moved slightly outward for plumper cheeks) */}
-        <circle cx="58" cy="85" r="8" fill="#FCA5A5" opacity="0.6" />
-        <circle cx="142" cy="85" r="8" fill="#FCA5A5" opacity="0.6" />
+        <circle cx="54" cy="85" r="8" fill="#FCA5A5" opacity="0.6" />
+        <circle cx="146" cy="85" r="8" fill="#FCA5A5" opacity="0.6" />
 
         {/* Face Expressions */}
         {currentMood === 'loved' ? (

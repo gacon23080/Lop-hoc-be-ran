@@ -98,6 +98,14 @@ export const AdminModal: React.FC<AdminModalProps> = ({
   const [draftBulletin, setDraftBulletin] = useState<BulletinPost[]>(bulletinPosts);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  React.useEffect(() => {
+    setDraftProfile(creatorProfile);
+  }, [creatorProfile]);
+
+  React.useEffect(() => {
+    setDraftBulletin(bulletinPosts);
+  }, [bulletinPosts]);
+
   if (!isOpen) return null;
 
   const showToast = (msg: string) => {

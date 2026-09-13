@@ -19,6 +19,7 @@ export function useFirebaseData() {
       const data = snapshot.docs.map(doc => doc.data() as Character);
       if(snapshot.docs.length > 0 || isFirebaseLoaded) {
         setCharacters(data);
+        storage.saveCharacters(data);
       }
     }, (err) => handleFirestoreError(err, OperationType.LIST, 'characters'));
 
@@ -27,13 +28,16 @@ export function useFirebaseData() {
       const data = snapshot.docs.map(doc => doc.data() as BulletinPost);
       if(snapshot.docs.length > 0 || isFirebaseLoaded) {
          setBulletinPosts(data);
+         storage.saveBulletinPosts(data);
       }
     }, (err) => handleFirestoreError(err, OperationType.LIST, 'bulletinPosts'));
 
     // 3. Creator Profile
     const unsubProfile = onSnapshot(doc(db, 'config', 'creatorProfile'), (docSnap) => {
       if (docSnap.exists()) {
-        setCreatorProfile(docSnap.data() as CreatorProfile);
+        const data = docSnap.data() as CreatorProfile;
+        setCreatorProfile(data);
+        storage.saveCreatorProfile(data);
       }
     }, (err) => handleFirestoreError(err, OperationType.GET, 'config/creatorProfile'));
 
@@ -42,6 +46,7 @@ export function useFirebaseData() {
       const data = snapshot.docs.map(doc => doc.data() as InboxMessage).sort((a,b) => b.likesCount - a.likesCount); // simplistic sort
       if(snapshot.docs.length > 0 || isFirebaseLoaded) {
         setInboxMessages(data);
+        storage.saveInboxMessages(data);
       }
     }, (err) => handleFirestoreError(err, OperationType.LIST, 'inboxMessages'));
 
@@ -50,6 +55,7 @@ export function useFirebaseData() {
       const data = snapshot.docs.map(doc => doc.data() as StickyNote).sort((a,b) => b.likes - a.likes);
       if(snapshot.docs.length > 0 || isFirebaseLoaded) {
         setStickyNotes(data);
+        storage.saveStickyNotes(data);
       }
     }, (err) => handleFirestoreError(err, OperationType.LIST, 'stickyNotes'));
 
