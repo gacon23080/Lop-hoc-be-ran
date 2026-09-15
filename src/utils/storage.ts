@@ -186,7 +186,7 @@ export const storage = {
       energy: 95,
       friendshipPoints: 20,
       level: 1,
-      accessory: 'sprout',
+      accessory: 'none',
       isSleeping: false,
       totalInteractions: 0,
       lastUpdated: now,

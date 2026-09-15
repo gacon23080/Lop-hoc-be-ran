@@ -74,7 +74,39 @@ export interface StickyNote {
   rotationDeg: number;
 }
 
-export type AccessoryType = 'none' | 'sprout' | 'bow' | 'crown' | 'sunglasses' | 'party_hat' | 'flower' | 'pacifier';
+export type AccessoryType = 
+  | 'none' 
+  | 'sprout' 
+  | 'bow' 
+  | 'crown' 
+  | 'sunglasses' 
+  | 'party_hat' 
+  | 'flower' 
+  | 'pacifier' 
+  | 'bunny_ears' 
+  | 'strawberry_pin' 
+  | 'beanie' 
+  | 'star_clip' 
+  | 'wizard_hat' 
+  | 'propeller_hat' 
+  | 'headphone' 
+  | 'flower_crown' 
+  | 'kindergarten_hat' 
+  | 'cat_ears' 
+  | 'frog_hat' 
+  | 'round_glasses' 
+  | 'apple_clip' 
+  | 'angel_halo'
+  | 'minnie_bow'
+  | 'grad_cap'
+  | 'panda_ears'
+  | 'fried_egg'
+  | 'carrot_clip'
+  | 'mushroom_hat'
+  | 'unicorn_horn'
+  | 'pirate_hat'
+  | 'sakura_pin'
+  | 'cupcake_hat';
 
 export interface MascotPet {
   id: string;
@@ -82,6 +114,7 @@ export interface MascotPet {
   species: string; // e.g. "Bé Rắn Lục Mầm Cây"
   badge: string; // e.g. "Háu Ăn Nhất Lớp", "Điệu Đà Dễ Thương"
   description: string;
+  gender: 'Bé Trai' | 'Bé Gái' | 'Phi Giới Tính';
   primaryColor: string; // Body color
   secondaryColor: string; // Belly color
   strokeColor: string;

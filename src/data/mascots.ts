@@ -7,8 +7,9 @@ export const DEFAULT_MASCOTS: MascotPet[] = [
     species: 'Bé Rắn Tím Hoa Cà',
     badge: 'Mascot Đại Diện Trường 💜',
     description: 'Bé rắn tím hoa cà dịu dàng múp míp, là biểu tượng đại diện của trường Mầm Non Rắn Con. Bé ngoan ngoãn, ngậm ti giả xinh xắn và luôn thích được cô giáo xoa đầu cưng nựng.',
-    primaryColor: '#E9D5FF', // Pastel lavender purple
-    secondaryColor: '#FAF5FF', // Cream lilac
+    gender: 'Bé Gái',
+    primaryColor: '#D8B4E5', // Slightly darker pastel purple
+    secondaryColor: '#F3E8FF', // Light purple cream
     strokeColor: '#581C87', // Deep grape purple
     quotes: [
       'Ưm... Khoai Môn chào cô giáo và các bạn mầm non ạ! (◕‿◕) 💜',
@@ -29,6 +30,7 @@ export const DEFAULT_MASCOTS: MascotPet[] = [
     species: 'Bé Rắn Lục Mầm Cây',
     badge: 'Háu Ăn & Mê Sưởi Nắng 🌱',
     description: 'Bé rắn lục mầm non tròn trĩnh, thích cuộn tròn dưới tán lá cây sưởi nắng, ngậm ti giả ngủ nướng say sưa và mê ăn quả ngọt.',
+    gender: 'Phi Giới Tính',
     primaryColor: '#86EFAC', // Green pastel
     secondaryColor: '#FEF08A', // Yellow pastel
     strokeColor: '#065F46', // Deep emerald
@@ -50,6 +52,7 @@ export const DEFAULT_MASCOTS: MascotPet[] = [
     species: 'Bé Rắn Hồng Mochi',
     badge: 'Điệu Đà & Ngọt Ngào 🎀',
     description: 'Bé rắn hồng phấn xinh xắn, thích soi gương, đeo nơ bướm và nghe cô giáo kể chuyện cổ tích trước khi ngủ.',
+    gender: 'Bé Gái',
     primaryColor: '#FBCFE8', // Pink mochi
     secondaryColor: '#FFF1F2', // Soft milky strawberry
     strokeColor: '#831843', // Deep rose
@@ -71,6 +74,7 @@ export const DEFAULT_MASCOTS: MascotPet[] = [
     species: 'Bé Rắn Vàng Nắng',
     badge: 'Siêu Tăng Động & Lém Lỉnh ⚡',
     description: 'Hiếu động nhất trường Mầm Non Rắn Con, thích trườn nhảy lon ton, lắc lục lạc và chơi trò trốn tìm.',
+    gender: 'Bé Trai',
     primaryColor: '#FED7AA', // Warm peach orange
     secondaryColor: '#FEF9C3', // Cream butter
     strokeColor: '#9A3412', // Warm amber brown
@@ -92,6 +96,7 @@ export const DEFAULT_MASCOTS: MascotPet[] = [
     species: 'Bé Rắn Bạch Tuyết',
     badge: 'Trầm Tĩnh & Thiên Thần ☁️',
     description: 'Thân hình trắng muốt như kẹo bông gòn, giọng nói thì thầm êm dịu, thích ngắm mây trôi và uống sữa ấm.',
+    gender: 'Bé Gái',
     primaryColor: '#EDE9FE', // Pearl lavender
     secondaryColor: '#FAF5FF', // Pure snow
     strokeColor: '#4C1D95', // Deep royal purple
@@ -113,6 +118,7 @@ export const DEFAULT_MASCOTS: MascotPet[] = [
     species: 'Bé Rắn Mun Socola',
     badge: 'Ngầu Đét Nhưng Hay Ngượng 🕶️',
     description: 'Ngoài mặt làm vẻ lạnh lùng cool ngầu, nhưng bên trong cực kỳ hảo ngọt và rất thích được xoa đầu cưng nựng.',
+    gender: 'Bé Trai',
     primaryColor: '#D7CCC8', // Warm chocolate latte
     secondaryColor: '#EFEBE9', // Warm milk foam
     strokeColor: '#4E342E', // Deep espresso brown
@@ -134,6 +140,7 @@ export const DEFAULT_MASCOTS: MascotPet[] = [
     species: 'Bé Rắn Bơ Ngọc Bích',
     badge: 'Béo Tròn Mê Bú Bình 🥑',
     description: 'Bé rắn màu xanh bơ ngọc bích múp míp, lúc nào cũng ôm khư khư bình sữa ấm trên tay, rất ngoan ngoãn dễ thương.',
+    gender: 'Phi Giới Tính',
     primaryColor: '#BBF7D0', // Soft avocado green
     secondaryColor: '#FEF08A', // Butter yellow
     strokeColor: '#14532D', // Deep forest green
@@ -155,6 +162,7 @@ export const DEFAULT_MASCOTS: MascotPet[] = [
     species: 'Bé Rắn Đỏ Ruby',
     badge: 'Má Lúm & Cười Tít Mắt 🍓',
     description: 'Màu đỏ hồng ruby rực rỡ như trái dâu chín mọng, trên đầu cài bông hoa cúc nhỏ xíu, hễ gặp ai là cười toe toét.',
+    gender: 'Bé Gái',
     primaryColor: '#FECDD3', // Strawberry rose
     secondaryColor: '#FFF1F2', // Soft milky cream
     strokeColor: '#9F1239', // Deep ruby rose
@@ -176,6 +184,7 @@ export const DEFAULT_MASCOTS: MascotPet[] = [
     species: 'Bé Gà Con Lông Xù',
     badge: 'Bạn Nhỏ Đáng Yêu 🐥',
     description: 'Bé gà con lông xù vàng ươm múp míp, là bạn nhỏ đáng yêu trong nhà trẻ mầm non. Bé thích chạy nhảy lon ton và luôn ngậm ti giả xinh xắn.',
+    gender: 'Bé Trai',
     primaryColor: '#FDE047', // Yellow chick
     secondaryColor: '#FEF08A', // Light yellow belly
     strokeColor: '#854D0E', // Golden brown stroke
@@ -198,6 +207,7 @@ export const DEFAULT_MASCOTS: MascotPet[] = [
     species: 'Bé Rắn Lam Mây Sáng',
     badge: 'Yêu Thiên Nhiên & Ngắm Sao 🌌',
     description: 'Mang màu xanh ngọc của bầu trời buổi sớm mai, đôi mắt tinh anh ngắm nhìn vũ trụ, thích nghe tiếng chim hót và ngắm trăng sao.',
+    gender: 'Bé Trai',
     primaryColor: '#BAE6FD', // Sky blue pastel
     secondaryColor: '#F0F9FF', // Cloud white
     strokeColor: '#0369A1', // Ocean deep blue
@@ -276,14 +286,38 @@ export interface AccessoryOption {
 }
 
 export const ACCESSORY_OPTIONS: AccessoryOption[] = [
-  { id: 'none', name: 'Tự nhiên (Không phụ kiện)', icon: '✨', description: 'Gương mặt mộc mạc tròn trĩnh', unlockLevel: 1 },
+  { id: 'none', name: 'Tự nhiên (Không)', icon: '✨', description: 'Gương mặt mộc mạc tròn trĩnh', unlockLevel: 1 },
   { id: 'sprout', name: 'Mầm Cây Nhỏ', icon: '🌱', description: 'Mầm cây 2 lá nhún nhảy trên đỉnh đầu', unlockLevel: 1 },
   { id: 'bow', name: 'Nơ Bướm Hồng', icon: '🎀', description: 'Nơ tiểu thư dịu dàng quý phái', unlockLevel: 1 },
   { id: 'party_hat', name: 'Mũ Sinh Nhật', icon: '🎉', description: 'Mũ tiệc tùng chấm bi rực rỡ', unlockLevel: 2 },
-  { id: 'flower', name: 'Hoa Cúc Cài Đầu', icon: '🌸', description: 'Hoa nở rực rỡ đón nắng mai', unlockLevel: 2 },
-  { id: 'sunglasses', name: 'Kính Râm Cool Ngầu', icon: '🕶️', description: 'Kính râm siêu sao thời thượng', unlockLevel: 3 },
-  { id: 'crown', name: 'Vương Miện Nhỏ', icon: '👑', description: 'Vương miện vàng hoàng gia quý phái', unlockLevel: 4 },
-  { id: 'pacifier', name: 'Núm Ngậm Em Bé', icon: '👶', description: 'Núm ngậm em bé cưng xỉu', unlockLevel: 1 }
+  { id: 'flower', name: 'Hoa Cúc Cài', icon: '🌸', description: 'Hoa nở rực rỡ đón nắng mai', unlockLevel: 2 },
+  { id: 'bunny_ears', name: 'Tai Thỏ Bông', icon: '🐰', description: 'Băng đô tai thỏ mềm mại đáng yêu', unlockLevel: 2 },
+  { id: 'strawberry_pin', name: 'Kẹp Dâu Tây', icon: '🍓', description: 'Kẹp tóc dâu tây ngọt ngào', unlockLevel: 3 },
+  { id: 'sunglasses', name: 'Kính Râm', icon: '🕶️', description: 'Kính râm siêu sao thời thượng', unlockLevel: 3 },
+  { id: 'beanie', name: 'Mũ Len Ấm', icon: '🧶', description: 'Mũ len mùa đông ấp áp', unlockLevel: 4 },
+  { id: 'crown', name: 'Vương Miện', icon: '👑', description: 'Vương miện vàng hoàng gia quý phái', unlockLevel: 4 },
+  { id: 'star_clip', name: 'Kẹp Sao Băng', icon: '⭐', description: 'Kẹp tóc ngôi sao lấp lánh', unlockLevel: 5 },
+  { id: 'wizard_hat', name: 'Mũ Phù Thủy', icon: '🧙', description: 'Mũ chóp nhọn đầy phép thuật', unlockLevel: 3 },
+  { id: 'propeller_hat', name: 'Mũ Chong Chóng', icon: '🚁', description: 'Mũ chong chóng quay tít', unlockLevel: 2 },
+  { id: 'kindergarten_hat', name: 'Mũ Vàng Mầm Non', icon: '🎒', description: 'Mũ vàng vành xanh đồng phục mầm non siêu cưng', unlockLevel: 1 },
+  { id: 'cat_ears', name: 'Băng Đô Tai Mèo', icon: '🐱', description: 'Tai mèo hồng phấn rung rinh tinh nghịch', unlockLevel: 2 },
+  { id: 'frog_hat', name: 'Mũ Bé Ếch Xanh', icon: '🐸', description: 'Mũ ếch xanh mắt ốc ngộ nghĩnh đáng yêu', unlockLevel: 2 },
+  { id: 'round_glasses', name: 'Kính Tròn Giáo Sư', icon: '👓', description: 'Kính tròn tri thức Nobita chăm ngoan', unlockLevel: 3 },
+  { id: 'apple_clip', name: 'Kẹp Táo Đỏ', icon: '🍎', description: 'Kẹp tóc quả táo đỏ mọng ngọt ngào', unlockLevel: 3 },
+  { id: 'angel_halo', name: 'Vòng Hào Quang', icon: '✨', description: 'Hào quang thiên thần lấp lánh thuần khiết', unlockLevel: 4 },
+  { id: 'headphone', name: 'Tai Nghe Nhạc', icon: '🎧', description: 'Tai nghe chụp tai sành điệu', unlockLevel: 4 },
+  { id: 'flower_crown', name: 'Vòng Hoa Tiên Tử', icon: '🌺', description: 'Vòng hoa rực rỡ sắc màu', unlockLevel: 3 },
+  { id: 'minnie_bow', name: 'Nơ Đỏ Chấm Bi', icon: '🎀', description: 'Nơ đỏ chấm bi trắng điệu đà dễ thương', unlockLevel: 1 },
+  { id: 'grad_cap', name: 'Mũ Cử Nhân Nhí', icon: '🎓', description: 'Mũ tốt nghiệp trạng nguyên thông thái', unlockLevel: 3 },
+  { id: 'panda_ears', name: 'Băng Đô Gấu Trúc', icon: '🐼', description: 'Đôi tai gấu trúc đen tròn ngộ nghĩnh', unlockLevel: 2 },
+  { id: 'fried_egg', name: 'Kẹp Trứng Ốp La', icon: '🍳', description: 'Kẹp tóc trứng ốp la lòng đào béo ngậy', unlockLevel: 2 },
+  { id: 'carrot_clip', name: 'Kẹp Cà Rốt Nhỏ', icon: '🥕', description: 'Củ cà rốt cam tươi mọng lá xanh', unlockLevel: 2 },
+  { id: 'mushroom_hat', name: 'Mũ Nấm Đốm Đỏ', icon: '🍄', description: 'Mũ nấm cổ tích rừng xanh xinh xắn', unlockLevel: 3 },
+  { id: 'unicorn_horn', name: 'Sừng Kỳ Lân Vàng', icon: '🦄', description: 'Sừng kỳ lân xoắn ốc phép thuật lấp lánh', unlockLevel: 4 },
+  { id: 'pirate_hat', name: 'Mũ Thuyền Trưởng', icon: '🏴‍☠️', description: 'Mũ hải tặc phiêu lưu đại dương dũng cảm', unlockLevel: 4 },
+  { id: 'sakura_pin', name: 'Kẹp Hoa Anh Đào', icon: '🌸', description: 'Cánh hoa anh đào mùa xuân Nhật Bản', unlockLevel: 1 },
+  { id: 'cupcake_hat', name: 'Mũ Bánh Cupcake', icon: '🧁', description: 'Bánh kem kem dâu gắn quả cherry ngọt ngào', unlockLevel: 3 },
+  { id: 'pacifier', name: 'Núm Ngậm Đặc Biệt', icon: '👶', description: 'Núm ngậm gắn sao hoàng gia', unlockLevel: 1 }
 ];
 
 export const FRIENDSHIP_LEVELS = [

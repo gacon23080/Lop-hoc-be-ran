@@ -166,10 +166,10 @@ export const CuteSnakeMascot: React.FC = () => {
               sound.playChime('bell');
               document.getElementById('playground-section')?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="w-full mt-2 py-1.5 px-2 rounded-xl bg-gradient-to-r from-pink-400 to-purple-500 hover:from-pink-500 hover:to-purple-600 text-white text-[10px] font-bold shadow-xs transition-all cursor-pointer flex items-center justify-center gap-1.5 hover:scale-102"
+            className="w-full mt-2 py-1.5 px-2 rounded-xl bg-[#E9D5FF] hover:bg-[#D8B4E5] text-[#581C87] border border-[#D8B4E5]/50 text-[10px] font-bold shadow-xs transition-all cursor-pointer flex items-center justify-center gap-1.5 hover:scale-102"
           >
             <span>🎡</span>
-            <span>Đến Khu Vui Chơi & Chăm Sóc Bé</span>
+            <span>Đến Khu Vui Chơi</span>
           </button>
 
           {/* Pointer Triangle to the mascot */}

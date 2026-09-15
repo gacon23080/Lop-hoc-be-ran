@@ -103,7 +103,6 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <Gamepad2 className="w-4 h-4 text-pink-600 animate-pulse" />
             <span>Khu Vui Chơi</span>
-            <span className="text-[10px] bg-pink-500 text-white font-bold px-1.5 py-0.2 rounded-full">Mới</span>
           </button>
 
           <button

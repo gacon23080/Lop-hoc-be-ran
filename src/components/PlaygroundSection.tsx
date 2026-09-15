@@ -41,9 +41,11 @@ import {
   DEFAULT_MASCOTS,
   NURSERY_FOODS,
   ACCESSORY_OPTIONS,
+  
   getFriendshipInfo,
   FoodItem,
-  AccessoryOption
+  AccessoryOption,
+  
 } from '../data/mascots';
 import { InteractiveMascotSnake, MascotMood } from './InteractiveMascotSnake';
 import { storage } from '../utils/storage';
@@ -82,6 +84,7 @@ export const PlaygroundSection: React.FC<PlaygroundSectionProps> = ({
       species: `Bé Rắn ${c.gender} • ${c.nickname}`,
       badge: c.title,
       description: c.personality || c.fullBio,
+      gender: c.gender === 'Bé Rồng Bí Ẩn' ? 'Phi Giới Tính' : c.gender,
       primaryColor: c.gender === 'Bé Gái' ? '#FBCFE8' : '#BAE6FD',
       secondaryColor: '#FAF5FF',
       strokeColor: c.gender === 'Bé Gái' ? '#831843' : '#0369A1',
@@ -133,6 +136,12 @@ export const PlaygroundSection: React.FC<PlaygroundSectionProps> = ({
   const [gameTimeLeft, setGameTimeLeft] = useState(15);
   const [fireflies, setFireflies] = useState<Firefly[]>([]);
   const playAreaRef = useRef<HTMLDivElement | null>(null);
+
+  // Mini Game: Rock Paper Scissors (Oẳn Tù Tì)
+  const [rpsState, setRpsState] = useState<'idle' | 'playing' | 'result'>('idle');
+  const [rpsPlayerChoice, setRpsPlayerChoice] = useState<'rock'|'paper'|'scissors'|null>(null);
+  const [rpsMascotChoice, setRpsMascotChoice] = useState<'rock'|'paper'|'scissors'|null>(null);
+  const [rpsResult, setRpsResult] = useState<'win'|'lose'|'draw'|null>(null);
 
   // Care Diary History
   const [careDiary, setCareDiary] = useState<string[]>(() => [
@@ -523,6 +532,73 @@ export const PlaygroundSection: React.FC<PlaygroundSectionProps> = ({
     }, 1200);
   };
 
+  // Mini Game: RPS (Oẳn Tù Tì)
+  const handleStartRps = () => {
+    setRpsState('playing');
+    setRpsPlayerChoice(null);
+    setRpsMascotChoice(null);
+    setRpsResult(null);
+    sound.playChime('bell');
+    triggerSpeech('Oẳn tù tì ra cái gì ra cái này! ✊🖐️✌️ Bạn chọn gì nè?');
+  };
+
+  const handlePlayRps = (choice: 'rock'|'paper'|'scissors') => {
+    setRpsPlayerChoice(choice);
+    const choices: ('rock'|'paper'|'scissors')[] = ['rock', 'paper', 'scissors'];
+    const mascotChoice = choices[Math.floor(Math.random() * choices.length)];
+    setRpsMascotChoice(mascotChoice);
+
+    let result: 'win'|'lose'|'draw' = 'draw';
+    if (
+      (choice === 'rock' && mascotChoice === 'scissors') ||
+      (choice === 'paper' && mascotChoice === 'rock') ||
+      (choice === 'scissors' && mascotChoice === 'paper')
+    ) {
+      result = 'win';
+    } else if (choice === mascotChoice) {
+      result = 'draw';
+    } else {
+      result = 'lose';
+    }
+    setRpsResult(result);
+    setRpsState('result');
+
+    setIsWiggling(true);
+    setTimeout(() => setIsWiggling(false), 800);
+
+    if (result === 'win') {
+      sound.playChime('levelUp');
+      addDiaryLog('Chơi oẳn tù tì thắng bé! (+20 Hạnh phúc, +25 EXP)');
+      triggerSpeech('Oa, bạn thắng rồi! Giỏi quá đi! 🎉💖');
+      setCareState((prev) => ({
+        ...prev,
+        happiness: Math.min(100, prev.happiness + 20),
+        energy: Math.max(0, prev.energy - 5)
+      }));
+      addExp(25);
+    } else if (result === 'lose') {
+      sound.playChime('pop');
+      addDiaryLog('Chơi oẳn tù tì nhường bé thắng! (+30 Hạnh phúc, +10 EXP)');
+      triggerSpeech('Hehe, con thắng rồi nè! Vui quá là vui! 🥰');
+      setCareState((prev) => ({
+        ...prev,
+        happiness: Math.min(100, prev.happiness + 30),
+        energy: Math.max(0, prev.energy - 5)
+      }));
+      addExp(10);
+    } else {
+      sound.playChime('bell');
+      addDiaryLog('Chơi oẳn tù tì hòa nhau! (+5 Hạnh phúc, +5 EXP)');
+      triggerSpeech('Hòa nhau rồi! Trùng hợp quá nè! 😆');
+      setCareState((prev) => ({
+        ...prev,
+        happiness: Math.min(100, prev.happiness + 5),
+        energy: Math.max(0, prev.energy - 5)
+      }));
+      addExp(5);
+    }
+  };
+
   // Action: Start Firefly Mini-Game
   const handleStartGame = () => {
     setIsGameActive(true);
@@ -667,8 +743,8 @@ export const PlaygroundSection: React.FC<PlaygroundSectionProps> = ({
             onClick={() => setPetCategory('mascot')}
             className={`px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
               petCategory === 'mascot'
-                ? 'bg-[#E8A0BF] text-white shadow-sm'
-                : 'bg-[#F8F6F4] text-[#4A3E3D]/80 hover:bg-[#E8A0BF]/10 border border-[#E8A0BF]/30'
+                ? 'bg-[#E9D5FF] text-[#581C87] shadow-sm border border-[#D8B4E5]'
+                : 'bg-[#F8F6F4] text-[#4A3E3D]/80 hover:bg-[#E9D5FF]/50 border border-[#D8B4E5]/30'
             }`}
           >
             <Baby className="w-4 h-4" />
@@ -681,8 +757,8 @@ export const PlaygroundSection: React.FC<PlaygroundSectionProps> = ({
               onClick={() => setPetCategory('classroom')}
               className={`px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                 petCategory === 'classroom'
-                  ? 'bg-[#E8A0BF] text-white shadow-sm'
-                  : 'bg-[#F8F6F4] text-[#4A3E3D]/80 hover:bg-[#E8A0BF]/10 border border-[#E8A0BF]/30'
+                  ? 'bg-[#E9D5FF] text-[#581C87] shadow-sm border border-[#D8B4E5]'
+                  : 'bg-[#F8F6F4] text-[#4A3E3D]/80 hover:bg-[#E9D5FF]/50 border border-[#D8B4E5]/30'
               }`}
             >
               <Smile className="w-4 h-4" />
@@ -736,6 +812,7 @@ export const PlaygroundSection: React.FC<PlaygroundSectionProps> = ({
                         strokeColor={mascot.strokeColor}
                         mood={isDeceasedMascot ? 'sad' : 'happy'}
                         accessory="none"
+                        
                         isAngel={isDeceasedMascot}
                         isChick={mascot.id === 'mascot-gacon' || mascot.species.toLowerCase().includes('gà con')}
                         className="w-full h-full"
@@ -1063,6 +1140,7 @@ export const PlaygroundSection: React.FC<PlaygroundSectionProps> = ({
                   strokeColor={currentPet.strokeColor}
                   mood={careState.isDeceased ? 'sad' : currentMood}
                   accessory={careState.accessory}
+                  
                   isWiggling={isWiggling}
                   isSleeping={careState.isSleeping}
                   cleanliness={careState.cleanliness}
@@ -1291,7 +1369,7 @@ export const PlaygroundSection: React.FC<PlaygroundSectionProps> = ({
                 )}
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {/* Game 1: Tung bóng len */}
                 <div className="p-4 rounded-2xl bg-[#F8F6F4] border border-[#E8A0BF]/20 flex flex-col justify-between">
                   <div>
@@ -1336,6 +1414,54 @@ export const PlaygroundSection: React.FC<PlaygroundSectionProps> = ({
                     {isGameActive ? `Đang chơi (${gameTimeLeft}s)...` : 'Chơi Mini-Game 🌟'}
                   </button>
                 </div>
+
+                {/* Game 3: Oẳn Tù Tì (Kéo Búa Bao) */}
+                <div className="p-4 rounded-2xl bg-[#F8F6F4] border border-[#E8A0BF]/20 flex flex-col justify-between">
+                  <div>
+                    <span className="text-2xl mb-1 block">✌️</span>
+                    <h5 className="font-bold text-xs sm:text-sm text-[#4A3E3D] mb-1">
+                      Kéo Búa Bao
+                    </h5>
+                    <p className="text-[11px] text-[#4A3E3D]/70 mb-3">
+                      Chơi oẳn tù tì với bé! Tương tác trực tiếp và nhận phần thưởng bất ngờ.
+                    </p>
+                  </div>
+
+                  {rpsState === 'idle' && (
+                    <button
+                      type="button"
+                      onClick={handleStartRps}
+                      className="w-full py-2 rounded-xl bg-[#60A5FA] hover:bg-[#3B82F6] text-white text-xs font-bold shadow-xs cursor-pointer"
+                    >
+                      Chơi Ngay ✌️
+                    </button>
+                  )}
+
+                  {rpsState === 'playing' && (
+                    <div className="flex gap-2 justify-center">
+                      <button onClick={() => handlePlayRps('rock')} className="w-10 h-10 bg-white rounded-xl shadow-xs text-xl hover:scale-110 transition-transform">✊</button>
+                      <button onClick={() => handlePlayRps('paper')} className="w-10 h-10 bg-white rounded-xl shadow-xs text-xl hover:scale-110 transition-transform">🖐️</button>
+                      <button onClick={() => handlePlayRps('scissors')} className="w-10 h-10 bg-white rounded-xl shadow-xs text-xl hover:scale-110 transition-transform">✌️</button>
+                    </div>
+                  )}
+
+                  {rpsState === 'result' && (
+                    <div className="flex flex-col items-center">
+                      <div className="flex items-center gap-2 mb-2 text-xl">
+                        <span>{rpsPlayerChoice === 'rock' ? '✊' : rpsPlayerChoice === 'paper' ? '🖐️' : '✌️'}</span>
+                        <span className="text-[10px] font-bold text-gray-400">VS</span>
+                        <span>{rpsMascotChoice === 'rock' ? '✊' : rpsMascotChoice === 'paper' ? '🖐️' : '✌️'}</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setRpsState('idle')}
+                        className="w-full py-1.5 rounded-xl bg-gray-200 hover:bg-gray-300 text-gray-700 text-[10px] font-bold cursor-pointer"
+                      >
+                        Chơi Lại ↺
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           )}
@@ -1352,7 +1478,7 @@ export const PlaygroundSection: React.FC<PlaygroundSectionProps> = ({
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2.5 max-h-84 overflow-y-auto pr-1">
                 {ACCESSORY_OPTIONS.map((acc) => {
                   const isEquipped = careState.accessory === acc.id;
                   const isLocked = friendshipInfo.level < acc.unlockLevel;
@@ -1614,6 +1740,7 @@ export const PlaygroundSection: React.FC<PlaygroundSectionProps> = ({
                   strokeColor={currentPet.strokeColor}
                   mood="happy"
                   accessory="none"
+                  
                   isChick={currentPet.id === 'mascot-gacon' || currentPet.species.toLowerCase().includes('gà con')}
                   className="w-full h-full"
                 />
@@ -1704,6 +1831,7 @@ export const PlaygroundSection: React.FC<PlaygroundSectionProps> = ({
                   strokeColor={currentPet.strokeColor}
                   mood="loved"
                   accessory={careState.accessory}
+                  
                   isChick={currentPet.id === 'mascot-gacon' || currentPet.species.toLowerCase().includes('gà con')}
                   className="w-full h-full"
                 />
