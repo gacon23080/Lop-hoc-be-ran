@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Heart, Sparkles, MessageCircle, X, Smile } from 'lucide-react';
+import { Plus, Heart, Sparkles, MessageCircle, X, Smile, Trash2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { StickyNote, StickyColor } from '../types';
 import { sound } from '../utils/audio';
@@ -8,12 +8,16 @@ interface StickyFanWallProps {
   notes: StickyNote[];
   onAddNote: (note: Omit<StickyNote, 'id' | 'likes' | 'createdAt' | 'rotationDeg'>) => void;
   onLikeNote: (noteId: string) => void;
+  isAdminLoggedIn?: boolean;
+  onDeleteNote?: (noteId: string) => void;
 }
 
 export const StickyFanWall: React.FC<StickyFanWallProps> = ({
   notes,
   onAddNote,
-  onLikeNote
+  onLikeNote,
+  isAdminLoggedIn,
+  onDeleteNote
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [author, setAuthor] = useState('');
@@ -134,6 +138,23 @@ export const StickyFanWall: React.FC<StickyFanWallProps> = ({
                   <div
                     className={`absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 rounded-xs ${theme.tape} opacity-85 shadow-xs border border-white/50 backdrop-blur-xs`}
                   ></div>
+
+                  {/* Admin Quick Delete Button */}
+                  {isAdminLoggedIn && onDeleteNote && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (window.confirm(`Admin: Xóa mẩu giấy note của "${note.author}"?`)) {
+                          sound.playChime('pop');
+                          onDeleteNote(note.id);
+                        }
+                      }}
+                      className="absolute top-2 right-2 p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500 text-red-600 hover:text-white transition-all cursor-pointer z-20 shadow-xs"
+                      title="Xóa Note này (Quyền Admin)"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  )}
 
                   <div>
                     {/* Sticker & Author */}

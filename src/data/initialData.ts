@@ -38,8 +38,8 @@ export const INITIAL_BULLETIN_POSTS: BulletinPost[] = [
     title: 'Lời Chào Từ Cô Giáo',
     subtitle: 'Gửi các bạn nhỏ và các cô chú ghé thăm',
     content: [
-      'Chào mừng các bạn nhỏ và quý phụ huynh ghé thăm vườn trẻ Mầm Non Rắn Con!',
-      'Nơi đây luôn tràn ngập tiếng cười giòn tan, kẹo ngọt và những mẩu chuyện manh nha lãng mạn đáng yêu nhất.',
+      'Chào mừng các bạn nhỏ và quý phụ huynh ghé thăm Lớp Mầm Non Rắn Con!',
+      'Nơi đây luôn tràn ngập tiếng cười giòn tan, sữa bột kẹo ngọt và những mẩu chuyện manh nha lãng mạn đáng yêu nhất.',
       'Hãy để lại một chiếc thư ẩn danh hoặc dán một tờ giấy note lên tường để nhắn nhủ với các bé nha!',
       'Yêu thương và thơm má mọi người thật nhiều moah moah~ 🍼'
     ],
@@ -52,7 +52,7 @@ export const INITIAL_BULLETIN_POSTS: BulletinPost[] = [
   {
     id: 'bulletin-3',
     type: 'rules',
-    title: 'Nội Quy Lớp Mầm Non',
+    title: 'Nội Quy Nhà Trẻ',
     subtitle: '5 điều bé ngoan cần nhớ khi đến lớp',
     content: [
       '1. Không được nghịch cắn đuôi bạn khi đang ngủ trưa.',

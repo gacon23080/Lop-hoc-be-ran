@@ -1,6 +1,6 @@
 import React from 'react';
-import { X, Heart, Sparkles, Shield, Users, Music, ExternalLink, Award, Baby, Cookie } from 'lucide-react';
-import { Character } from '../types';
+import { X, Heart, Sparkles, Shield, Users, Music, ExternalLink, Award, Baby, Cookie, Trash2, Send } from 'lucide-react';
+import { Character, InboxMessage } from '../types';
 import { sound } from '../utils/audio';
 
 interface CharacterModalProps {
@@ -9,6 +9,11 @@ interface CharacterModalProps {
   onToggleLike: (charId: string) => void;
   isLiked: boolean;
   onPlayMusic?: (char: Character) => void;
+  inboxMessages?: InboxMessage[];
+  isAdminLoggedIn?: boolean;
+  onDeleteInboxMessage?: (msgId: string) => void;
+  onLikeInboxMessage?: (msgId: string) => void;
+  onWriteLetter?: (charName: string) => void;
 }
 
 export const CharacterModal: React.FC<CharacterModalProps> = ({
@@ -16,9 +21,19 @@ export const CharacterModal: React.FC<CharacterModalProps> = ({
   onClose,
   onToggleLike,
   isLiked,
-  onPlayMusic
+  onPlayMusic,
+  inboxMessages = [],
+  isAdminLoggedIn,
+  onDeleteInboxMessage,
+  onLikeInboxMessage,
+  onWriteLetter
 }) => {
   if (!character) return null;
+
+  // Filter letters sent specifically to this character
+  const characterLetters = inboxMessages.filter(
+    (m) => m.recipient === character.name && (m.status === 'approved' || isAdminLoggedIn)
+  );
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-fadeIn">
@@ -187,6 +202,107 @@ export const CharacterModal: React.FC<CharacterModalProps> = ({
                 <strong>Ghét:</strong> {character.dislikes}
               </p>
             </div>
+          </div>
+
+          {/* Hộp Thư Riêng Gửi Bé (Chỉ hiện trong trang nhân vật) */}
+          <div className="bg-white p-5 rounded-2xl border border-[var(--dominant)]/50 shadow-xs space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--text-main)] flex items-center gap-1.5">
+                  <span>💌</span>
+                  <span>Hộp Thư Gửi Riêng Bé {character.name} ({characterLetters.length})</span>
+                </h4>
+                <p className="text-[11px] text-[var(--text-main)]/70 mt-0.5">
+                  Các lá thư người truy cập gửi riêng cho bé {character.name}
+                </p>
+              </div>
+
+              {onWriteLetter && (
+                <button
+                  onClick={() => {
+                    sound.playChime('pop');
+                    onClose();
+                    onWriteLetter(character.name);
+                  }}
+                  className="self-start sm:self-auto inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[var(--dominant)] to-[var(--grad-start)] text-[var(--text-main)] text-xs font-bold shadow-xs hover:brightness-105 cursor-pointer"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  <span>Viết Thư Cho Bé</span>
+                </button>
+              )}
+            </div>
+
+            {characterLetters.length === 0 ? (
+              <div className="p-4 rounded-xl bg-[var(--grad-end)] border border-dashed border-[var(--dominant)] text-center text-xs text-[var(--text-main)]/70">
+                <p className="font-semibold mb-1">Bé {character.name} chưa nhận được lá thư riêng nào!</p>
+                <p className="text-[11px]">
+                  Bạn có thể bấm nút &quot;Viết Thư Cho Bé&quot; ở trên để gửi lời chúc, tỏ tình hoặc nhắn nhủ ngọt ngào nha! 🐍✨
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
+                {characterLetters.map((msg) => (
+                  <div
+                    key={msg.id}
+                    className="p-3.5 rounded-xl bg-[var(--grad-end)] border border-[var(--dominant)]/40 text-xs space-y-2 relative"
+                  >
+                    {/* Admin Delete */}
+                    {isAdminLoggedIn && onDeleteInboxMessage && (
+                      <button
+                        onClick={() => {
+                          if (window.confirm(`Admin: Xóa thư gửi bé ${character.name}?`)) {
+                            sound.playChime('pop');
+                            onDeleteInboxMessage(msg.id);
+                          }
+                        }}
+                        className="absolute top-2 right-2 p-1 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all cursor-pointer shadow-2xs"
+                        title="Xóa thư (Quyền Admin)"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+
+                    <div className="flex items-center justify-between text-[11px] pr-6">
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-bold bg-white px-2 py-0.5 rounded-md border border-[var(--dominant)]/40 text-[var(--text-main)]">
+                          {msg.senderNickname}
+                        </span>
+                        <span className="text-[10px] text-[var(--text-main)]/70 bg-white/60 px-1.5 py-0.5 rounded">
+                          {msg.category}
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-[var(--text-main)]/60">{msg.timestamp}</span>
+                    </div>
+
+                    <p className="bg-white p-2.5 rounded-lg border border-[var(--dominant)]/30 text-[var(--text-main)] leading-relaxed">
+                      {msg.content}
+                    </p>
+
+                    {/* Character Reply */}
+                    {msg.reply && (
+                      <div className="bg-gradient-to-r from-[var(--grad-start)] to-[var(--grad-start)] p-2.5 rounded-lg border border-[var(--dominant)] text-[11px] leading-relaxed">
+                        <span className="font-bold text-[var(--text-main)] block mb-0.5 flex items-center gap-1">
+                          <span>🐍</span> Bé {character.name} đáp lời:
+                        </span>
+                        <p className="italic text-[var(--text-main)]">{msg.reply}</p>
+                      </div>
+                    )}
+
+                    {onLikeInboxMessage && (
+                      <div className="flex items-center justify-end pt-1">
+                        <button
+                          onClick={() => { sound.playChime('love'); onLikeInboxMessage(msg.id); }}
+                          className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-white text-[11px] font-bold text-[var(--text-main)] border border-[var(--dominant)]/50 hover:scale-105 cursor-pointer"
+                        >
+                          <Heart className="w-3 h-3 text-pink-500 fill-current" />
+                          <span>{msg.likesCount}</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
         </div>

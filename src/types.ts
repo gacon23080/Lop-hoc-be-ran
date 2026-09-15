@@ -49,7 +49,7 @@ export interface CreatorProfile {
 
 export interface InboxMessage {
   id: string;
-  recipient: string; // "Cô Giáo Chủ Nhiệm" or Character Name
+  recipient: string; // "Tất cả" | "Cô Giáo Chủ Nhiệm" | Character Name
   senderNickname: string;
   category: 'Tỏ tình' | 'Gợi ý cốt truyện' | 'Hỏi thăm sức khỏe' | 'Tâm sự tuổi hồng' | 'Câu hỏi bí mật';
   content: string;
@@ -58,6 +58,7 @@ export interface InboxMessage {
   reply?: string;
   repliedAt?: string;
   likesCount: number;
+  senderId?: string;
 }
 
 export type StickyColor = 'yellow' | 'pink' | 'purple' | 'green' | 'blue';
@@ -72,3 +73,47 @@ export interface StickyNote {
   createdAt: string;
   rotationDeg: number;
 }
+
+export type AccessoryType = 'none' | 'sprout' | 'bow' | 'crown' | 'sunglasses' | 'party_hat' | 'flower' | 'pacifier';
+
+export interface MascotPet {
+  id: string;
+  name: string;
+  species: string; // e.g. "Bé Rắn Lục Mầm Cây"
+  badge: string; // e.g. "Háu Ăn Nhất Lớp", "Điệu Đà Dễ Thương"
+  description: string;
+  primaryColor: string; // Body color
+  secondaryColor: string; // Belly color
+  strokeColor: string;
+  characterId?: string; // If linked to a class character
+  avatarUrl?: string;
+  quotes: string[];
+  favoriteFood: string;
+  favoriteFoodIcon: string;
+  favoriteToy: string;
+  favoriteToyIcon: string;
+}
+
+export interface PetCareState {
+  petId: string;
+  hunger: number; // 0 - 100 (100 = No nê)
+  happiness: number; // 0 - 100 (100 = Siêu vui)
+  cleanliness: number; // 0 - 100 (100 = Thơm tho sạch bong)
+  energy: number; // 0 - 100 (100 = Tràn đầy năng lượng)
+  friendshipPoints: number; // Điểm thân thiết
+  level: number; // Cấp bậc tình bạn 1 - 10
+  accessory: AccessoryType;
+  isSleeping: boolean;
+  totalInteractions: number;
+  lastUpdated: number;
+  lastFedAt: number; // Timestamp of last feeding
+  lastBathedAt: number; // Timestamp of last bath
+  lastPattedAt: number; // Timestamp of last pat
+  // Adoption attributes (optional)
+  isAdopted?: boolean;
+  adoptedAt?: number;
+  customNickname?: string;
+  isDeceased?: boolean; // If not fed for 7 days
+  deceasedAt?: number;
+}
+

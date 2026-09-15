@@ -67,14 +67,16 @@
       "type": "object",
       "properties": {
         "id": { "type": "string" },
-        "senderName": { "type": "string" },
+        "recipient": { "type": "string" },
+        "senderNickname": { "type": "string" },
+        "category": { "type": "string" },
         "content": { "type": "string" },
         "timestamp": { "type": "string" },
-        "likesCount": { "type": "number" },
         "status": { "type": "string" },
         "reply": { "type": "string" },
         "repliedAt": { "type": "string" },
-        "targetCharId": { "type": "string" }
+        "likesCount": { "type": "number" },
+        "senderId": { "type": "string" }
       }
     },
     "StickyNote": {

@@ -5,13 +5,13 @@ import { sound } from '../utils/audio';
 import { CuteBabySnake, SnakeMood } from './CuteBabySnake';
 
 const CUTE_QUOTES = [
-  'Chít chít~ Con chào cô và các bạn ạ! (✿◠‿◠) 💜',
-  'Bé rắn tím ngoan ngoãn đang đợi giờ uống sữa ấm nè 🍼✨',
+  'Ưm... Bé Khoai Môn chào cô và các bạn ạ! (✿◠‿◠) 💜',
+  'Bé Khoai Môn ngoan ngoãn đang đợi giờ uống sữa ấm nè 🍼✨',
   'Hôm nay bé được cô thưởng 3 hoa bé ngoan đó nha! ⭐',
   'Xoa đầu cưng nựng bé một cái đi mà~ (≧◡≦) ♡',
-  'Bé có cái nơ tím xinh xắn đáng yêu hông nè? 🎀🐍',
+  'Chiếc ti giả của bé có màu êm dịu giống hệt bụng bé luôn nè 💜',
   'Cô chủ nhiệm dạy chúng mình phải luôn mỉm cười vui vẻ nè 🌸',
-  'Bạn có muốn nghe bài hát vui nhộn của lớp rắn con hông? 🎵',
+  'Bạn có muốn nghe bài hát vui nhộn của lớp bé ngoan hông? 🎵',
   'Bé ngoan là biết vâng lời, không quấy khóc đâu nè~ 🧸'
 ];
 
@@ -90,12 +90,12 @@ export const CuteSnakeMascot: React.FC = () => {
   const handleSnakeClick = () => {
     sound.playChime('pop');
     setQuoteIndex((prev) => (prev + 1) % CUTE_QUOTES.length);
-    triggerReaction('Dạ bé rắn tím nghe đây ạ~ Chít chít chít! 💕', 'pat');
+    triggerReaction('Dạ Bé Khoai Môn nghe đây ạ~ Chít chít! 💕💜', 'pat');
   };
 
   return (
-    <aside aria-label="Bé Rắn Mascot" className="fixed bottom-5 left-4 sm:left-6 z-40 flex items-end gap-3 select-none pointer-events-auto">
-      {/* Speech Bubble - Pastel Purple Palette: #F3E8FF, #E9D5FF, #D8B4E5, var(--dominant) */}
+    <aside aria-label="Bé Khoai Môn Mascot" className="fixed bottom-5 left-4 sm:left-6 z-40 flex items-end gap-3 select-none pointer-events-auto">
+      {/* Speech Bubble - Pastel Theme */}
       {isOpen && (
         <div className="relative max-w-[250px] sm:max-w-[285px] bg-white/95 rounded-3xl p-3.5 shadow-xl shadow-[var(--dominant)]/20 border-2 border-[var(--dominant)] backdrop-blur-xs animate-bounce-gentle">
           
@@ -104,7 +104,7 @@ export const CuteSnakeMascot: React.FC = () => {
             onClick={() => setIsOpen(false)}
             className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-white/60 border border-[var(--dominant)] text-[var(--text-main)]/70 hover:text-[var(--text-main)] flex items-center justify-center text-xs shadow-xs cursor-pointer hover:scale-110 transition-all"
             title="Tạm thu nhỏ"
-            aria-label="Thu nhỏ bé rắn"
+            aria-label="Thu nhỏ Bé Khoai Môn"
           >
             <X className="w-3.5 h-3.5" />
           </button>
@@ -115,7 +115,7 @@ export const CuteSnakeMascot: React.FC = () => {
               <span className="w-4 h-4 inline-flex items-center justify-center">
                 <CuteBabySnake mood="happy" className="w-4 h-4" />
               </span>
-              <span>Bé Rắn Con Mầm Non</span>
+              <span>Bé Khoai Môn Lớp Mầm</span>
             </span>
             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[var(--accent)] text-[var(--text-main)] border border-[var(--dominant)]">
               Xoa đầu: {patsCount} lần
@@ -159,6 +159,18 @@ export const CuteSnakeMascot: React.FC = () => {
               <span className="truncate">Xoa đầu</span>
             </button>
           </div>
+
+          {/* Quick link to playground nursery */}
+          <button
+            onClick={() => {
+              sound.playChime('bell');
+              document.getElementById('playground-section')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="w-full mt-2 py-1.5 px-2 rounded-xl bg-gradient-to-r from-pink-400 to-purple-500 hover:from-pink-500 hover:to-purple-600 text-white text-[10px] font-bold shadow-xs transition-all cursor-pointer flex items-center justify-center gap-1.5 hover:scale-102"
+          >
+            <span>🎡</span>
+            <span>Đến Khu Vui Chơi & Chăm Sóc Bé</span>
+          </button>
 
           {/* Pointer Triangle to the mascot */}
           <div className="absolute -bottom-2 left-7 w-3 h-3 bg-white border-b-2 border-r-2 border-[var(--dominant)] transform rotate-45"></div>

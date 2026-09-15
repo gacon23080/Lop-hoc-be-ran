@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Heart, LayoutGrid, SlidersHorizontal, Sparkles, ChevronLeft, ChevronRight, Eye, Tag, Music, ExternalLink, Baby, Shield } from 'lucide-react';
+import { Search, Heart, LayoutGrid, SlidersHorizontal, Sparkles, ChevronLeft, ChevronRight, Eye, Tag, Music, ExternalLink, Baby, Shield, Mail } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { Character } from '../types';
+import { Character, InboxMessage } from '../types';
 import { CharacterModal } from './CharacterModal';
 import { sound } from '../utils/audio';
 
@@ -11,6 +11,11 @@ interface CharacterSectionProps {
   userLikes: Record<string, boolean>;
   onPlayMusic?: (char: Character) => void;
   totalStudents?: number;
+  inboxMessages?: InboxMessage[];
+  isAdminLoggedIn?: boolean;
+  onDeleteInboxMessage?: (msgId: string) => void;
+  onLikeInboxMessage?: (msgId: string) => void;
+  onSelectRecipientForLetter?: (charName: string) => void;
 }
 
 export const CharacterSection: React.FC<CharacterSectionProps> = ({
@@ -18,7 +23,12 @@ export const CharacterSection: React.FC<CharacterSectionProps> = ({
   onToggleLike,
   userLikes,
   onPlayMusic,
-  totalStudents
+  totalStudents,
+  inboxMessages = [],
+  isAdminLoggedIn,
+  onDeleteInboxMessage,
+  onLikeInboxMessage,
+  onSelectRecipientForLetter
 }) => {
   const [selectedTag, setSelectedTag] = useState<string>('#Tất Cả');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -279,6 +289,20 @@ export const CharacterSection: React.FC<CharacterSectionProps> = ({
                         {char.gender} • {char.age}
                       </div>
 
+                      {/* Floating Letter Indicator if letters exist */}
+                      {(() => {
+                        const count = inboxMessages.filter(
+                          (m) => m.recipient === char.name && (m.status === 'approved' || isAdminLoggedIn)
+                        ).length;
+                        if (count === 0) return null;
+                        return (
+                          <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-pink-500/95 text-white text-[10px] font-bold shadow-xs flex items-center gap-1 backdrop-blur-xs">
+                            <Mail className="w-3 h-3" />
+                            <span>{count} thư</span>
+                          </div>
+                        );
+                      })()}
+
                       {/* Floating Music Indicator if music is attached */}
                       {char.youtubeMusicUrl && (
                         <div className="absolute bottom-2 right-2 px-2.5 py-1 rounded-full bg-white/95 text-red-500 text-[10px] font-bold shadow-xs flex items-center gap-1 backdrop-blur-xs border border-red-200">
@@ -526,6 +550,11 @@ export const CharacterSection: React.FC<CharacterSectionProps> = ({
         onToggleLike={onToggleLike}
         isLiked={activeModalChar ? !!userLikes[activeModalChar.id] : false}
         onPlayMusic={onPlayMusic}
+        inboxMessages={inboxMessages}
+        isAdminLoggedIn={isAdminLoggedIn}
+        onDeleteInboxMessage={onDeleteInboxMessage}
+        onLikeInboxMessage={onLikeInboxMessage}
+        onWriteLetter={onSelectRecipientForLetter}
       />
     </section>
   );

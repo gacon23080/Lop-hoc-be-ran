@@ -16,6 +16,7 @@ import {
   Upload,
   Music,
   ExternalLink,
+  Globe,
   StickyNote as StickyIcon
 } from 'lucide-react';
 import {
@@ -92,6 +93,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
   // Inbox reply modal state
   const [replyingMsg, setReplyingMsg] = useState<InboxMessage | null>(null);
   const [replyText, setReplyText] = useState('');
+  const [adminInboxFilter, setAdminInboxFilter] = useState<'all' | 'teacher' | 'public' | 'characters' | 'unreplied'>('all');
 
   // Classroom settings draft state
   const [draftProfile, setDraftProfile] = useState<CreatorProfile>(creatorProfile);
@@ -516,86 +518,198 @@ export const AdminModal: React.FC<AdminModalProps> = ({
               {/* TAB 2: INBOX MANAGER */}
               {activeTab === 'inbox' && (
                 <div className="space-y-6">
-                  <div>
-                    <h3 className="font-['Comfortaa'] font-bold text-lg text-[var(--text-main)]">
-                      Hộp Thư Ẩn Danh Cần Duyệt & Trả Lời
-                    </h3>
-                    <p className="text-xs text-[var(--text-main)]/70">
-                      Xem thư từ độc giả, viết câu trả lời từ Cô Giáo hoặc các bé rắn và duyệt lên bảng công khai
-                    </p>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                      <h3 className="font-['Comfortaa'] font-bold text-lg text-[var(--text-main)]">
+                        Hộp Thư Ẩn Danh Cần Duyệt & Trả Lời
+                      </h3>
+                      <p className="text-xs text-[var(--text-main)]/70">
+                        Quản lý toàn bộ thư: Thư riêng gửi Cô Giáo, thư gửi nhân vật và thư công khai
+                      </p>
+                    </div>
+
+                    {/* Filter Pills */}
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => setAdminInboxFilter('all')}
+                        className={`px-3 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                          adminInboxFilter === 'all'
+                            ? 'bg-[var(--dominant)] text-[var(--text-main)] shadow-xs'
+                            : 'bg-white text-[var(--text-main)]/70 border border-[var(--dominant)]/40 hover:bg-[var(--grad-end)]'
+                        }`}
+                      >
+                        Tất cả ({inboxMessages.length})
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setAdminInboxFilter('teacher')}
+                        className={`flex items-center gap-1 px-3 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                          adminInboxFilter === 'teacher'
+                            ? 'bg-purple-600 text-white shadow-xs'
+                            : 'bg-purple-50 text-purple-800 border border-purple-200 hover:bg-purple-100'
+                        }`}
+                      >
+                        <Lock className="w-3 h-3" />
+                        <span>Thư Riêng Cô Giáo ({inboxMessages.filter(m => m.recipient === 'Cô Giáo Chủ Nhiệm').length})</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setAdminInboxFilter('public')}
+                        className={`flex items-center gap-1 px-3 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                          adminInboxFilter === 'public'
+                            ? 'bg-blue-600 text-white shadow-xs'
+                            : 'bg-blue-50 text-blue-800 border border-blue-200 hover:bg-blue-100'
+                        }`}
+                      >
+                        <Globe className="w-3 h-3" />
+                        <span>Công Khai ({inboxMessages.filter(m => m.recipient === 'Tất cả' || m.recipient === 'Tất cả lớp Mầm Non').length})</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setAdminInboxFilter('characters')}
+                        className={`flex items-center gap-1 px-3 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                          adminInboxFilter === 'characters'
+                            ? 'bg-emerald-600 text-white shadow-xs'
+                            : 'bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100'
+                        }`}
+                      >
+                        <Sparkles className="w-3 h-3" />
+                        <span>Gửi Các Bé ({inboxMessages.filter(m => m.recipient !== 'Cô Giáo Chủ Nhiệm' && m.recipient !== 'Tất cả' && m.recipient !== 'Tất cả lớp Mầm Non').length})</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setAdminInboxFilter('unreplied')}
+                        className={`px-3 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                          adminInboxFilter === 'unreplied'
+                            ? 'bg-amber-500 text-white shadow-xs'
+                            : 'bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100'
+                        }`}
+                      >
+                        Chưa Trả Lời ({inboxMessages.filter(m => !m.reply).length})
+                      </button>
+                    </div>
                   </div>
 
                   <div className="space-y-3">
-                    {inboxMessages.map((msg) => (
-                      <div
-                        key={msg.id}
-                        className={`rounded-2xl p-4 sm:p-5 border transition-all ${
-                          msg.status === 'approved'
-                            ? 'bg-white border-[var(--dominant)]'
-                            : 'bg-amber-50/50 border-amber-200'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between gap-2 mb-2">
-                          <div className="flex items-center gap-2">
-                            <span
-                              className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full ${
-                                msg.status === 'approved'
-                                  ? 'bg-[var(--accent)] text-[var(--text-main)] border border-[var(--dominant)]'
-                                  : 'bg-amber-100 text-amber-800'
-                              }`}
-                            >
-                              {msg.status === 'approved' ? '✓ Đã Duyệt Công Khai' : '⏳ Chờ Duyệt'}
-                            </span>
-                            <span className="text-xs font-bold text-[var(--text-main)]">
-                              Chủ đề: {msg.category}
-                            </span>
+                    {(() => {
+                      const filteredMessages = inboxMessages.filter(msg => {
+                        if (adminInboxFilter === 'teacher') return msg.recipient === 'Cô Giáo Chủ Nhiệm';
+                        if (adminInboxFilter === 'public') return msg.recipient === 'Tất cả' || msg.recipient === 'Tất cả lớp Mầm Non';
+                        if (adminInboxFilter === 'characters') return msg.recipient !== 'Cô Giáo Chủ Nhiệm' && msg.recipient !== 'Tất cả' && msg.recipient !== 'Tất cả lớp Mầm Non';
+                        if (adminInboxFilter === 'unreplied') return !msg.reply;
+                        return true;
+                      });
+
+                      if (filteredMessages.length === 0) {
+                        return (
+                          <div className="text-center py-10 bg-white rounded-2xl border border-dashed border-[var(--dominant)] text-xs text-[var(--text-main)]/70">
+                            Không có thư nào phù hợp với bộ lọc hiện tại.
                           </div>
-                          <span className="text-[11px] text-[var(--text-main)]/50">
-                            {msg.timestamp}
-                          </span>
-                        </div>
+                        );
+                      }
 
-                        <div className="bg-[var(--grad-end)] p-3 rounded-xl border border-[var(--dominant)]/40 text-xs text-[var(--text-main)] mb-3">
-                          <p className="font-bold text-[var(--text-main)] mb-1">
-                            Người gửi: {msg.senderNickname} • Gửi đến: {msg.recipient}
-                          </p>
-                          <p>{msg.content}</p>
-                        </div>
+                      return filteredMessages.map((msg) => {
+                        const isPrivateToTeacher = msg.recipient === 'Cô Giáo Chủ Nhiệm';
+                        const isPublicAll = msg.recipient === 'Tất cả' || msg.recipient === 'Tất cả lớp Mầm Non';
 
-                        {msg.reply && (
-                          <div className="bg-purple-50/60 p-3 rounded-xl border border-purple-200 text-xs text-[var(--text-main)] mb-3">
-                            <span className="font-bold text-[var(--text-main)] block mb-0.5">
-                              Câu trả lời từ {msg.recipient}:
-                            </span>
-                            <p className="italic">{msg.reply}</p>
+                        return (
+                          <div
+                            key={msg.id}
+                            className={`rounded-2xl p-4 sm:p-5 border transition-all ${
+                              isPrivateToTeacher
+                                ? 'bg-purple-50/40 border-purple-200'
+                                : msg.status === 'approved'
+                                ? 'bg-white border-[var(--dominant)]'
+                                : 'bg-amber-50/50 border-amber-200'
+                            }`}
+                          >
+                            <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                              <div className="flex flex-wrap items-center gap-2">
+                                {/* Visibility Type Badge */}
+                                {isPrivateToTeacher ? (
+                                  <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-900 border border-purple-300 flex items-center gap-1">
+                                    <Lock className="w-3 h-3 text-purple-600" /> Thư Riêng Cô Giáo (Bí mật)
+                                  </span>
+                                ) : isPublicAll ? (
+                                  <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-900 border border-blue-300 flex items-center gap-1">
+                                    <Globe className="w-3 h-3 text-blue-600" /> Công Khai Cả Lớp
+                                  </span>
+                                ) : (
+                                  <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300 flex items-center gap-1">
+                                    <Sparkles className="w-3 h-3 text-emerald-600" /> Gửi Bé {msg.recipient} (Hiện trang bé)
+                                  </span>
+                                )}
+
+                                <span className="text-xs font-bold text-[var(--text-main)]">
+                                  Chủ đề: {msg.category}
+                                </span>
+                              </div>
+
+                              <span className="text-[11px] text-[var(--text-main)]/50">
+                                {msg.timestamp}
+                              </span>
+                            </div>
+
+                            <div className="bg-[var(--grad-end)] p-3 rounded-xl border border-[var(--dominant)]/40 text-xs text-[var(--text-main)] mb-3">
+                              <p className="font-bold text-[var(--text-main)] mb-1">
+                                Người gửi: {msg.senderNickname} • Người nhận: {msg.recipient}
+                              </p>
+                              <p className="whitespace-pre-wrap">{msg.content}</p>
+                            </div>
+
+                            {msg.reply && (
+                              <div className="bg-purple-50/80 p-3 rounded-xl border border-purple-200 text-xs text-[var(--text-main)] mb-3">
+                                <span className="font-bold text-purple-900 block mb-0.5 flex items-center gap-1">
+                                  <span>{isPrivateToTeacher ? '👩‍🏫 Phản hồi riêng từ Cô Giáo Chủ Nhiệm:' : `🐍 Phản hồi từ ${msg.recipient}:`}</span>
+                                </span>
+                                <p className="italic text-purple-950 whitespace-pre-wrap">{msg.reply}</p>
+                              </div>
+                            )}
+
+                            <div className="flex items-center justify-between pt-1">
+                              <span className="text-[11px] text-[var(--text-main)]/60">
+                                Mã: #{msg.id.slice(-6)}
+                              </span>
+
+                              <div className="flex items-center gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => handleOpenReplyModal(msg)}
+                                  className={`flex items-center gap-1 px-3.5 py-1.5 rounded-xl text-xs font-bold hover:brightness-105 cursor-pointer shadow-xs ${
+                                    isPrivateToTeacher
+                                      ? 'bg-purple-600 text-white hover:bg-purple-700'
+                                      : 'bg-[var(--dominant)] text-[var(--text-main)]'
+                                  }`}
+                                >
+                                  <MessageSquare className="w-3.5 h-3.5" />
+                                  <span>{msg.reply ? 'Sửa Câu Trả Lời' : isPrivateToTeacher ? 'Phản Hồi Riêng' : 'Trả Lời & Duyệt'}</span>
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    if (window.confirm(`Admin: Bạn chắc chắn muốn xóa lá thư của "${msg.senderNickname}"?`)) {
+                                      sound.playChime('pop');
+                                      onDeleteInboxMessage(msg.id);
+                                      showToast('Đã xóa thư thành công!');
+                                    }
+                                  }}
+                                  className="p-1.5 rounded-xl bg-red-50 hover:bg-red-500 text-red-500 hover:text-white transition-all cursor-pointer border border-red-200"
+                                  title="Xóa thư (Quyền Admin)"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </div>
                           </div>
-                        )}
-
-                        <div className="flex items-center justify-end gap-2 pt-1">
-                          <button
-                            onClick={() => handleOpenReplyModal(msg)}
-                            className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[var(--dominant)] text-[var(--text-main)] text-xs font-bold hover:brightness-105 cursor-pointer shadow-xs"
-                          >
-                            <MessageSquare className="w-3.5 h-3.5" />
-                            <span>{msg.reply ? 'Sửa Câu Trả Lời' : 'Trả Lời & Duyệt'}</span>
-                          </button>
-
-                          <button
-                            onClick={() => {
-                              if (confirm('Xóa thư này khỏi danh sách?')) {
-                                sound.playChime('pop');
-                                onDeleteInboxMessage(msg.id);
-                                showToast('Đã xóa thư');
-                              }
-                            }}
-                            className="p-1.5 rounded-xl bg-red-50 text-red-500 hover:bg-red-100 cursor-pointer"
-                            title="Xóa thư"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
-                    ))}
+                        );
+                      });
+                    })()}
 
                     {inboxMessages.length === 0 && (
                       <div className="text-center py-10 bg-white rounded-2xl border border-dashed border-[var(--dominant)] text-xs text-[var(--text-main)]/70">
@@ -1260,6 +1374,31 @@ export const AdminModal: React.FC<AdminModalProps> = ({
               </p>
               <p className="italic">{replyingMsg.content}</p>
             </div>
+
+            {replyingMsg.recipient === 'Cô Giáo Chủ Nhiệm' && (
+              <div className="p-3 rounded-xl bg-purple-100/80 border border-purple-300 text-xs text-purple-950 mb-3 flex items-start gap-2">
+                <Lock className="w-4 h-4 text-purple-700 shrink-0 mt-0.5" />
+                <p>
+                  <strong>Chế độ Thư Riêng Tư:</strong> Thư này được giữ bí mật 100%. Câu trả lời của Cô Giáo sẽ chỉ hiển thị riêng cho người gửi này tại tab <strong>&quot;Thư Riêng Của Bạn&quot;</strong>, hoàn toàn không công khai ra ngoài.
+                </p>
+              </div>
+            )}
+            {replyingMsg.recipient !== 'Cô Giáo Chủ Nhiệm' && replyingMsg.recipient !== 'Tất cả' && replyingMsg.recipient !== 'Tất cả lớp Mầm Non' && (
+              <div className="p-3 rounded-xl bg-emerald-100/80 border border-emerald-300 text-xs text-emerald-950 mb-3 flex items-start gap-2">
+                <Sparkles className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
+                <p>
+                  <strong>Hồ Sơ Bé {replyingMsg.recipient}:</strong> Câu trả lời này sẽ hiển thị kèm lá thư trong sổ hồ sơ cá nhân của bé {replyingMsg.recipient}.
+                </p>
+              </div>
+            )}
+            {(replyingMsg.recipient === 'Tất cả' || replyingMsg.recipient === 'Tất cả lớp Mầm Non') && (
+              <div className="p-3 rounded-xl bg-blue-100/80 border border-blue-300 text-xs text-blue-950 mb-3 flex items-start gap-2">
+                <Globe className="w-4 h-4 text-blue-700 shrink-0 mt-0.5" />
+                <p>
+                  <strong>Công khai:</strong> Thư và câu trả lời sẽ hiển thị trên <strong>Bảng Tin Hòm Thư Lớp</strong> cho toàn bộ độc giả cùng đọc.
+                </p>
+              </div>
+            )}
 
             <form onSubmit={handleSaveReplySubmit} className="space-y-4">
               <div>

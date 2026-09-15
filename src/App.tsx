@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { HeroCreator } from './components/HeroCreator';
 import { CharacterSection } from './components/CharacterSection';
+import { PlaygroundSection } from './components/PlaygroundSection';
 import { SecretInboxSection } from './components/SecretInboxSection';
 import { StickyFanWall } from './components/StickyFanWall';
 import { AdminModal } from './components/AdminModal';
@@ -31,6 +32,15 @@ export default function App() {
   // Admin Modal & Authentication State
   const [isAdminModalOpen, setIsAdminModalOpen] = useState<boolean>(false);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(false);
+  const [selectedInboxRecipient, setSelectedInboxRecipient] = useState<string>('Tất cả');
+
+  const handleSelectRecipientForLetter = (charName: string) => {
+    setSelectedInboxRecipient(charName);
+    const inboxEl = document.getElementById('inbox-section');
+    if (inboxEl) {
+      inboxEl.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   useEffect(() => {
     storage.saveUserLikes(userLikes);
@@ -58,13 +68,17 @@ export default function App() {
   const handleAddInboxMessage = (
     newMsgData: Omit<InboxMessage, 'id' | 'timestamp' | 'status' | 'likesCount'>
   ) => {
+    const newMsgId = 'msg-' + Date.now();
+    const visitorId = storage.getVisitorId();
     const newMsg: InboxMessage = {
       ...newMsgData,
-      id: 'msg-' + Date.now(),
+      id: newMsgId,
       timestamp: 'Vừa xong',
       status: 'approved',
-      likesCount: 0
+      likesCount: 0,
+      senderId: newMsgData.senderId || visitorId
     };
+    storage.addMySentLetterId(newMsgId);
     firebaseActions.addInboxMessage(newMsg);
   };
 
@@ -182,14 +196,27 @@ export default function App() {
           userLikes={userLikes}
           onPlayMusic={(char) => setActiveMusicCharacter(char)}
           totalStudents={creatorProfile?.totalStudents || characters.length || 0}
+          inboxMessages={inboxMessages}
+          isAdminLoggedIn={isAdminLoggedIn}
+          onDeleteInboxMessage={handleDeleteInboxMessage}
+          onLikeInboxMessage={handleLikeInboxMessage}
+          onSelectRecipientForLetter={handleSelectRecipientForLetter}
         />
 
-        {/* 4. Anonymous Secret Inbox ("Hộp Thư Ẩn Danh Lớp Mầm Non") */}
+        {/* 4. Interactive Daycare Mascot Playground ("Khu Vui Chơi & Nhà Trẻ Bé Rắn") */}
+        <PlaygroundSection
+          characters={characters}
+        />
+
+        {/* 5. Anonymous Secret Inbox ("Hộp Thư Ẩn Danh Lớp Mầm Non") */}
         <SecretInboxSection
           messages={inboxMessages}
           characters={characters}
           onSubmitMessage={handleAddInboxMessage}
           onLikeMessage={handleLikeInboxMessage}
+          isAdminLoggedIn={isAdminLoggedIn}
+          onDeleteMessage={handleDeleteInboxMessage}
+          initialRecipient={selectedInboxRecipient}
         />
 
         {/* 5. Interactive Fan Wall ("Bức Tường Sticky Note") */}
@@ -197,6 +224,8 @@ export default function App() {
           notes={stickyNotes}
           onAddNote={handleAddStickyNote}
           onLikeNote={handleLikeStickyNote}
+          isAdminLoggedIn={isAdminLoggedIn}
+          onDeleteNote={handleDeleteStickyNote}
         />
       </main>
 

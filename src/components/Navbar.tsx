@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Lock, Sparkles, Menu, X, Heart, MessageSquareHeart, Baby, Newspaper } from 'lucide-react';
+import { Lock, Sparkles, Menu, X, Heart, MessageSquareHeart, Baby, Newspaper, Gamepad2 } from 'lucide-react';
 import { sound } from '../utils/audio';
 
 interface NavbarProps {
@@ -97,6 +97,16 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
 
           <button
+            id="nav-link-playground"
+            onClick={() => scrollToSection('playground-section')}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold text-[var(--text-main)] hover:text-[var(--text-main)] hover:bg-[var(--grad-end)] transition-all cursor-pointer bg-pink-100/40 border border-pink-200/50 text-pink-900"
+          >
+            <Gamepad2 className="w-4 h-4 text-pink-600 animate-pulse" />
+            <span>Khu Vui Chơi</span>
+            <span className="text-[10px] bg-pink-500 text-white font-bold px-1.5 py-0.2 rounded-full">Mới</span>
+          </button>
+
+          <button
             id="nav-link-inbox"
             onClick={() => scrollToSection('inbox-section')}
             className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold text-[var(--text-main)] hover:text-[var(--text-main)] hover:bg-[var(--grad-end)] transition-all cursor-pointer"
@@ -162,6 +172,13 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <Baby className="w-5 h-5 text-[var(--text-main)]" />
             <span>Bé Rắn Của Lớp</span>
+          </button>
+          <button
+            onClick={() => scrollToSection('playground-section')}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-left font-semibold text-pink-700 bg-pink-100/50 hover:bg-pink-100 transition-all border border-pink-200/60"
+          >
+            <Gamepad2 className="w-5 h-5 text-pink-600" />
+            <span>Khu Vui Chơi (Chăm Sóc Mascot) 🎡</span>
           </button>
           <button
             onClick={() => scrollToSection('inbox-section')}

@@ -3,7 +3,8 @@ import {
   BulletinPost,
   CreatorProfile,
   InboxMessage,
-  StickyNote
+  StickyNote,
+  PetCareState
 } from '../types';
 import {
   INITIAL_CHARACTERS,
@@ -21,6 +22,10 @@ const KEYS = {
   STICKY: 'mamnon_ran_sticky',
   ADMIN_AUTH: 'mamnon_ran_admin_auth',
   USER_LIKES: 'mamnon_ran_user_likes',
+  VISITOR_ID: 'mamnon_ran_visitor_id',
+  MY_SENT_LETTERS: 'mamnon_ran_my_sent_letters',
+  PET_CARE_PREFIX: 'mamnon_ran_pet_care_',
+  SELECTED_PET_ID: 'mamnon_ran_selected_pet_id',
 };
 
 export const storage = {
@@ -134,6 +139,136 @@ export const storage = {
       localStorage.setItem(KEYS.USER_LIKES, JSON.stringify(likes));
     } catch (e) {
       console.error('Failed to save user likes to localStorage', e);
+    }
+  },
+
+  getVisitorId: (): string => {
+    try {
+      let id = localStorage.getItem(KEYS.VISITOR_ID);
+      if (!id) {
+        id = 'visitor_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+        localStorage.setItem(KEYS.VISITOR_ID, id);
+      }
+      return id;
+    } catch {
+      return 'visitor_default';
+    }
+  },
+
+  getMySentLetterIds: (): string[] => {
+    try {
+      const data = localStorage.getItem(KEYS.MY_SENT_LETTERS);
+      return data ? JSON.parse(data) : [];
+    } catch {
+      return [];
+    }
+  },
+
+  addMySentLetterId: (msgId: string) => {
+    try {
+      const current = storage.getMySentLetterIds();
+      if (!current.includes(msgId)) {
+        current.push(msgId);
+        localStorage.setItem(KEYS.MY_SENT_LETTERS, JSON.stringify(current));
+      }
+    } catch (e) {
+      console.error('Failed to save sent letter id', e);
+    }
+  },
+
+  getPetCareState: (petId: string): PetCareState => {
+    const now = Date.now();
+    const defaultState: PetCareState = {
+      petId,
+      hunger: 80,
+      happiness: 85,
+      cleanliness: 90,
+      energy: 95,
+      friendshipPoints: 20,
+      level: 1,
+      accessory: 'sprout',
+      isSleeping: false,
+      totalInteractions: 0,
+      lastUpdated: now,
+      lastFedAt: now,
+      lastBathedAt: now,
+      lastPattedAt: now,
+      isAdopted: false,
+      isDeceased: false
+    };
+
+    try {
+      const data = localStorage.getItem(KEYS.PET_CARE_PREFIX + petId);
+      if (!data) return defaultState;
+      const parsed: PetCareState = JSON.parse(data);
+
+      // Ensure timestamp fields exist
+      if (!parsed.lastFedAt) parsed.lastFedAt = parsed.lastUpdated || now;
+      if (!parsed.lastBathedAt) parsed.lastBathedAt = parsed.lastUpdated || now;
+      if (!parsed.lastPattedAt) parsed.lastPattedAt = parsed.lastUpdated || now;
+
+      // Check if pet is adopted and has not been fed for 7 days (7 * 24 * 60 * 60 * 1000 ms)
+      const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+      if (parsed.isAdopted && !parsed.isDeceased) {
+        if (now - parsed.lastFedAt >= SEVEN_DAYS_MS) {
+          parsed.isDeceased = true;
+          parsed.deceasedAt = parsed.lastFedAt + SEVEN_DAYS_MS;
+          parsed.hunger = 0;
+          parsed.happiness = 0;
+        }
+      }
+
+      // Time-based decay for hunger, cleanliness, happiness
+      const hoursElapsed = Math.min(168, Math.max(0, (now - (parsed.lastUpdated || now)) / (1000 * 60 * 60)));
+      if (hoursElapsed > 0.5 && !parsed.isSleeping && !parsed.isDeceased) {
+        // Natural hunger drop
+        const hungerDrop = Math.round(hoursElapsed * 2.5);
+        parsed.hunger = Math.max(0, parsed.hunger - hungerDrop);
+
+        // Natural dirtiness over time if not bathed
+        const hoursSinceBathed = (now - parsed.lastBathedAt) / (1000 * 60 * 60);
+        parsed.cleanliness = Math.max(10, Math.round(100 - hoursSinceBathed * 1.8));
+
+        // Happiness drops if neglected without pats or if dirty/hungry
+        const hoursSincePatted = (now - parsed.lastPattedAt) / (1000 * 60 * 60);
+        let happinessPenalty = 0;
+        if (parsed.hunger < 30) happinessPenalty += 15;
+        if (parsed.cleanliness < 40) happinessPenalty += 15;
+        if (hoursSincePatted > 12) happinessPenalty += Math.round((hoursSincePatted - 12) * 1.5);
+        parsed.happiness = Math.max(15, Math.round(parsed.happiness - happinessPenalty));
+
+        parsed.lastUpdated = now;
+      }
+      return parsed;
+    } catch {
+      return defaultState;
+    }
+  },
+
+  savePetCareState: (state: PetCareState) => {
+    try {
+      localStorage.setItem(KEYS.PET_CARE_PREFIX + state.petId, JSON.stringify({
+        ...state,
+        lastUpdated: Date.now()
+      }));
+    } catch (e) {
+      console.error('Failed to save pet care state', e);
+    }
+  },
+
+  getSelectedPetId: (): string => {
+    try {
+      return localStorage.getItem(KEYS.SELECTED_PET_ID) || 'mascot-tim';
+    } catch {
+      return 'mascot-tim';
+    }
+  },
+
+  saveSelectedPetId: (petId: string) => {
+    try {
+      localStorage.setItem(KEYS.SELECTED_PET_ID, petId);
+    } catch (e) {
+      console.error('Failed to save selected pet id', e);
     }
   },
 

@@ -258,7 +258,7 @@ export const HeroCreator: React.FC<HeroCreatorProps> = ({
                   {selectedPost.customLinkUrl && (
                     <div className="mt-4 pt-3 border-t border-[var(--dominant)]/40 flex flex-wrap items-center justify-between gap-2">
                       <span className="text-xs text-[var(--text-main)] italic flex items-center gap-1">
-                        <span>📎</span> Tài liệu liên kết lớp mầm non:
+                        <span>📎</span> Tài liệu liên kết nhà trẻ:
                       </span>
                       <a
                         href={selectedPost.customLinkUrl}
