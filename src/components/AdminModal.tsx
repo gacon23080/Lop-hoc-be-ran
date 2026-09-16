@@ -99,6 +99,8 @@ export const AdminModal: React.FC<AdminModalProps> = ({
   const [draftProfile, setDraftProfile] = useState<CreatorProfile>(creatorProfile);
   const [draftBulletin, setDraftBulletin] = useState<BulletinPost[]>(bulletinPosts);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [confirmDeleteMsgId, setConfirmDeleteMsgId] = useState<string | null>(null);
+  const [confirmDeleteNoteId, setConfirmDeleteNoteId] = useState<string | null>(null);
 
   React.useEffect(() => {
     setDraftProfile(creatorProfile);
@@ -690,20 +692,40 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                                   <span>{msg.reply ? 'Sửa Câu Trả Lời' : isPrivateToTeacher ? 'Phản Hồi Riêng' : 'Trả Lời & Duyệt'}</span>
                                 </button>
 
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    if (window.confirm(`Admin: Bạn chắc chắn muốn xóa lá thư của "${msg.senderNickname}"?`)) {
-                                      sound.playChime('pop');
-                                      onDeleteInboxMessage(msg.id);
-                                      showToast('Đã xóa thư thành công!');
-                                    }
-                                  }}
-                                  className="p-1.5 rounded-xl bg-red-50 hover:bg-red-500 text-red-500 hover:text-white transition-all cursor-pointer border border-red-200"
-                                  title="Xóa thư (Quyền Admin)"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </button>
+                                {confirmDeleteMsgId === msg.id ? (
+                                  <div className="flex items-center gap-1 bg-white p-1 rounded-xl shadow-md border border-red-300">
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        sound.playChime('pop');
+                                        onDeleteInboxMessage(msg.id);
+                                        setConfirmDeleteMsgId(null);
+                                        showToast('Đã xóa thư thành công!');
+                                      }}
+                                      className="px-2 py-1 rounded-lg bg-red-600 hover:bg-red-700 text-white text-[10px] font-bold cursor-pointer flex items-center gap-1 shadow-xs"
+                                      title="Xác nhận xóa"
+                                    >
+                                      <Trash2 className="w-3 h-3" />
+                                      <span>Xóa</span>
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => setConfirmDeleteMsgId(null)}
+                                      className="px-1.5 py-1 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 text-[10px] font-semibold cursor-pointer"
+                                    >
+                                      Hủy
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    onClick={() => setConfirmDeleteMsgId(msg.id)}
+                                    className="p-1.5 rounded-xl bg-red-50 hover:bg-red-500 text-red-500 hover:text-white transition-all cursor-pointer border border-red-200"
+                                    title="Xóa thư (Quyền Admin)"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                )}
                               </div>
                             </div>
                           </div>
@@ -1021,16 +1043,35 @@ export const AdminModal: React.FC<AdminModalProps> = ({
 
                         <div className="flex items-center justify-between pt-2 border-t border-black/5 text-xs">
                           <span className="text-red-400 font-bold">♥ {note.likes}</span>
-                          <button
-                            onClick={() => {
-                              sound.playChime('pop');
-                              onDeleteStickyNote(note.id);
-                              showToast('Đã xóa ghi chú');
-                            }}
-                            className="text-red-500 hover:underline text-[11px] font-bold cursor-pointer"
-                          >
-                            Xóa Note
-                          </button>
+                          {confirmDeleteNoteId === note.id ? (
+                            <div className="flex items-center gap-1">
+                              <button
+                                onClick={() => {
+                                  sound.playChime('pop');
+                                  onDeleteStickyNote(note.id);
+                                  setConfirmDeleteNoteId(null);
+                                  showToast('Đã xóa ghi chú');
+                                }}
+                                className="px-2 py-0.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-[10px] font-bold cursor-pointer"
+                              >
+                                Xóa
+                              </button>
+                              <button
+                                onClick={() => setConfirmDeleteNoteId(null)}
+                                className="px-1.5 py-0.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 text-[10px] cursor-pointer"
+                              >
+                                Hủy
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => setConfirmDeleteNoteId(note.id)}
+                              className="text-red-500 hover:text-red-700 text-[11px] font-bold cursor-pointer flex items-center gap-1 hover:underline"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                              <span>Xóa Note</span>
+                            </button>
+                          )}
                         </div>
                       </div>
                     ))}

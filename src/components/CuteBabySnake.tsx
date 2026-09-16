@@ -9,6 +9,8 @@ interface CuteBabySnakeProps {
   primaryColor?: string;
   strokeColor?: string;
   secondaryColor?: string;
+  bibColor?: string;
+  pacifierColor?: string;
   isChick?: boolean;
 }
 
@@ -19,6 +21,8 @@ export const CuteBabySnake: React.FC<CuteBabySnakeProps> = ({
   primaryColor = '#E9D5FF', // Bé Khoai Môn pastel lavender purple
   strokeColor = '#581C87', // Deep grape purple
   secondaryColor = '#FAF5FF', // Cream lilac
+  bibColor = '#FEF08A', // Yếm màu vàng mầm non
+  pacifierColor = '#FAF5FF', // Ti giả màu êm dịu giống bụng bé (#FAF5FF)
   isChick = false
 }) => {
   const currentMood = isPatted ? 'loved' : mood;
@@ -66,8 +70,8 @@ export const CuteBabySnake: React.FC<CuteBabySnakeProps> = ({
         <path d="M 73 145 Q 100 155 127 145" stroke={strokeColor} strokeWidth="4" strokeLinecap="round" opacity="0.3" fill="none" />
         <path d="M 76 165 Q 100 172 124 165" stroke={strokeColor} strokeWidth="4" strokeLinecap="round" opacity="0.3" fill="none" />
 
-        {/* Baby Bib (Yếm em bé) */}
-        <path d="M 65 110 C 65 135, 135 135, 135 110 Z" fill="#FEF08A" stroke={strokeColor} strokeWidth="4" strokeLinejoin="round" />
+        {/* Baby Bib (Yếm em bé - Màu vàng mầm non như cũ) */}
+        <path d="M 65 110 C 65 135, 135 135, 135 110 Z" fill={bibColor} stroke={strokeColor} strokeWidth="4" strokeLinejoin="round" />
         <path d="M 65 110 C 80 120, 120 120, 135 110" fill="none" stroke="#FACC15" strokeWidth="4" />
 
         {/* Head (Super Chubby mochi cheeks!) */}
@@ -130,7 +134,7 @@ export const CuteBabySnake: React.FC<CuteBabySnakeProps> = ({
 
         {/* Baby Pacifier (Ti Giả Em Bé - Luôn đeo trên miệng - màu đồng nhất với bụng) */}
         <g id="baby-pacifier">
-          <ellipse cx="100" cy="94" rx="14" ry="11" fill={secondaryColor} stroke={strokeColor} strokeWidth="3" />
+          <ellipse cx="100" cy="94" rx="14" ry="11" fill={pacifierColor || secondaryColor} stroke={strokeColor} strokeWidth="3" />
           <ellipse cx="98" cy="91" rx="8" ry="5" fill="#FDF2F8" opacity="0.6" />
           <circle cx="100" cy="94" r="5" fill="#FFFFFF" stroke={strokeColor} strokeWidth="2" />
           <path d="M 94 99 C 94 107, 106 107, 106 99" fill="none" stroke={strokeColor} strokeWidth="2.5" strokeLinecap="round" />

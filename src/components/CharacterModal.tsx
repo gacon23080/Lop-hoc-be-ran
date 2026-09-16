@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { X, Heart, Sparkles, Shield, Users, Music, ExternalLink, Award, Baby, Cookie, Trash2, Send } from 'lucide-react';
 import { Character, InboxMessage } from '../types';
 import { sound } from '../utils/audio';
@@ -28,6 +28,8 @@ export const CharacterModal: React.FC<CharacterModalProps> = ({
   onLikeInboxMessage,
   onWriteLetter
 }) => {
+  const [confirmDeleteMsgId, setConfirmDeleteMsgId] = useState<string | null>(null);
+
   if (!character) return null;
 
   // Filter letters sent specifically to this character
@@ -248,18 +250,38 @@ export const CharacterModal: React.FC<CharacterModalProps> = ({
                   >
                     {/* Admin Delete */}
                     {isAdminLoggedIn && onDeleteInboxMessage && (
-                      <button
-                        onClick={() => {
-                          if (window.confirm(`Admin: Xóa thư gửi bé ${character.name}?`)) {
-                            sound.playChime('pop');
-                            onDeleteInboxMessage(msg.id);
-                          }
-                        }}
-                        className="absolute top-2 right-2 p-1 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all cursor-pointer shadow-2xs"
-                        title="Xóa thư (Quyền Admin)"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                      <div className="absolute top-2 right-2 z-20">
+                        {confirmDeleteMsgId === msg.id ? (
+                          <div className="flex items-center gap-1 bg-white p-1 rounded-xl shadow-lg border border-red-300 animate-scaleUp">
+                            <button
+                              onClick={() => {
+                                sound.playChime('pop');
+                                onDeleteInboxMessage(msg.id);
+                                setConfirmDeleteMsgId(null);
+                              }}
+                              className="px-2 py-0.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1 shadow-xs"
+                              title="Xác nhận xóa thư"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                              <span>Xóa</span>
+                            </button>
+                            <button
+                              onClick={() => setConfirmDeleteMsgId(null)}
+                              className="px-1.5 py-0.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 text-[10px] font-semibold transition-all cursor-pointer"
+                            >
+                              Hủy
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => setConfirmDeleteMsgId(msg.id)}
+                            className="p-1 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all cursor-pointer shadow-2xs border border-red-200/60"
+                            title="Xóa thư (Quyền Admin)"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </div>
                     )}
 
                     <div className="flex items-center justify-between text-[11px] pr-6">

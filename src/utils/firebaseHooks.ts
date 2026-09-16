@@ -44,19 +44,15 @@ export function useFirebaseData() {
     // 4. Inbox Messages
     const unsubInbox = onSnapshot(collection(db, 'inboxMessages'), (snapshot) => {
       const data = snapshot.docs.map(doc => doc.data() as InboxMessage).sort((a,b) => b.likesCount - a.likesCount); // simplistic sort
-      if(snapshot.docs.length > 0 || isFirebaseLoaded) {
-        setInboxMessages(data);
-        storage.saveInboxMessages(data);
-      }
+      setInboxMessages(data);
+      storage.saveInboxMessages(data);
     }, (err) => handleFirestoreError(err, OperationType.LIST, 'inboxMessages'));
 
     // 5. Sticky Notes
     const unsubSticky = onSnapshot(collection(db, 'stickyNotes'), (snapshot) => {
       const data = snapshot.docs.map(doc => doc.data() as StickyNote).sort((a,b) => b.likes - a.likes);
-      if(snapshot.docs.length > 0 || isFirebaseLoaded) {
-        setStickyNotes(data);
-        storage.saveStickyNotes(data);
-      }
+      setStickyNotes(data);
+      storage.saveStickyNotes(data);
     }, (err) => handleFirestoreError(err, OperationType.LIST, 'stickyNotes'));
 
     setTimeout(() => setIsFirebaseLoaded(true), 2000);
@@ -76,6 +72,8 @@ export function useFirebaseData() {
     creatorProfile,
     inboxMessages,
     stickyNotes,
+    setInboxMessages,
+    setStickyNotes
   };
 }
 

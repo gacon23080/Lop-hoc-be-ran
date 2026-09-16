@@ -105,6 +105,14 @@ export const storage = {
       console.error('Failed to save inbox messages to localStorage', e);
     }
   },
+  deleteInboxMessage: (msgId: string) => {
+    try {
+      const current = storage.getInboxMessages().filter(m => m.id !== msgId);
+      storage.saveInboxMessages(current);
+    } catch (e) {
+      console.error('Failed to delete inbox message from localStorage', e);
+    }
+  },
 
   getStickyNotes: (): StickyNote[] => {
     try {
@@ -123,6 +131,14 @@ export const storage = {
       localStorage.setItem(KEYS.STICKY, JSON.stringify(notes));
     } catch (e) {
       console.error('Failed to save sticky notes to localStorage', e);
+    }
+  },
+  deleteStickyNote: (noteId: string) => {
+    try {
+      const current = storage.getStickyNotes().filter(n => n.id !== noteId);
+      storage.saveStickyNotes(current);
+    } catch (e) {
+      console.error('Failed to delete sticky note from localStorage', e);
     }
   },
 

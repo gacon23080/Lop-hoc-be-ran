@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Heart, Sparkles, MessageCircle, X, Smile, Trash2 } from 'lucide-react';
+import { Plus, Heart, Sparkles, MessageCircle, X, Smile, Trash2, CheckCircle2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { StickyNote, StickyColor } from '../types';
 import { sound } from '../utils/audio';
@@ -24,6 +24,16 @@ export const StickyFanWall: React.FC<StickyFanWallProps> = ({
   const [content, setContent] = useState('');
   const [color, setColor] = useState<StickyColor>('pink');
   const [sticker, setSticker] = useState('🌸');
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [actionToast, setActionToast] = useState<string | null>(null);
+
+  const triggerDelete = (noteId: string) => {
+    sound.playChime('pop');
+    onDeleteNote?.(noteId);
+    setConfirmDeleteId(null);
+    setActionToast('Đã xóa mẩu giấy note thành công!');
+    setTimeout(() => setActionToast(null), 3000);
+  };
 
   const STICKERS = ['🌸', '🐍', '⭐', '🍼', '🍎', '🍭', '🎀', '🧸', '🍰', '✨'];
 
@@ -119,6 +129,19 @@ export const StickyFanWall: React.FC<StickyFanWallProps> = ({
           </button>
         </div>
 
+        {/* Admin status banner if logged in */}
+        {isAdminLoggedIn && (
+          <div className="mb-4 px-4 py-3 rounded-2xl bg-amber-50 border-2 border-amber-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-amber-900 animate-fadeIn">
+            <div className="flex items-center gap-2 font-bold">
+              <span className="text-lg">🛡️</span>
+              <span>Chế Độ Quản Trị Viên: Bạn có toàn quyền xóa các mẩu giấy note của người truy cập.</span>
+            </div>
+            <span className="text-[11px] text-amber-800/80 bg-amber-100 px-2.5 py-1 rounded-full self-start sm:self-auto font-medium">
+              Bấm biểu tượng 🗑️ trên từng note để xóa ngay
+            </span>
+          </div>
+        )}
+
         {/* Board Display (Corkboard/Preschool wall) */}
         <div className="relative bg-[var(--grad-end)] rounded-3xl p-6 sm:p-10 border-4 border-[var(--dominant)]/60 shadow-2xl shadow-[var(--dominant)]/10 min-h-[420px]">
           
@@ -128,6 +151,8 @@ export const StickyFanWall: React.FC<StickyFanWallProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 relative z-10">
             {notes.map((note) => {
               const theme = COLOR_MAP[note.color] || COLOR_MAP.pink;
+              const isConfirmingThis = confirmDeleteId === note.id;
+
               return (
                 <div
                   key={note.id}
@@ -139,21 +164,36 @@ export const StickyFanWall: React.FC<StickyFanWallProps> = ({
                     className={`absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-5 rounded-xs ${theme.tape} opacity-85 shadow-xs border border-white/50 backdrop-blur-xs`}
                   ></div>
 
-                  {/* Admin Quick Delete Button */}
+                  {/* Admin Quick Delete Control */}
                   {isAdminLoggedIn && onDeleteNote && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (window.confirm(`Admin: Xóa mẩu giấy note của "${note.author}"?`)) {
-                          sound.playChime('pop');
-                          onDeleteNote(note.id);
-                        }
-                      }}
-                      className="absolute top-2 right-2 p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500 text-red-600 hover:text-white transition-all cursor-pointer z-20 shadow-xs"
-                      title="Xóa Note này (Quyền Admin)"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                    <div className="absolute top-2 right-2 z-20" onClick={(e) => e.stopPropagation()}>
+                      {isConfirmingThis ? (
+                        <div className="flex items-center gap-1 bg-white p-1 rounded-xl shadow-lg border border-red-300 animate-scaleUp">
+                          <button
+                            onClick={() => triggerDelete(note.id)}
+                            className="px-2 py-1 rounded-lg bg-red-600 hover:bg-red-700 text-white text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1 shadow-xs"
+                            title="Xác nhận xóa mẩu note này"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                            <span>Xóa</span>
+                          </button>
+                          <button
+                            onClick={() => setConfirmDeleteId(null)}
+                            className="px-2 py-1 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 text-[10px] font-semibold transition-all cursor-pointer"
+                          >
+                            Hủy
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => setConfirmDeleteId(note.id)}
+                          className="p-1.5 rounded-lg bg-red-500/15 hover:bg-red-500 text-red-600 hover:text-white transition-all cursor-pointer shadow-xs border border-red-300/40"
+                          title="Xóa Note này (Quyền Admin)"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
                   )}
 
                   <div>
@@ -333,6 +373,14 @@ export const StickyFanWall: React.FC<StickyFanWallProps> = ({
 
             </form>
           </div>
+        </div>
+      )}
+
+      {/* Action Toast Notification */}
+      {actionToast && (
+        <div className="fixed bottom-6 right-6 z-50 px-4 py-2.5 rounded-2xl bg-gray-900/90 backdrop-blur-xs text-white text-xs font-bold shadow-xl flex items-center gap-2 animate-slideUp">
+          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+          <span>{actionToast}</span>
         </div>
       )}
 

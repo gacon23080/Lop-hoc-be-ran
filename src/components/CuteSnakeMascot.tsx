@@ -160,18 +160,6 @@ export const CuteSnakeMascot: React.FC = () => {
             </button>
           </div>
 
-          {/* Quick link to playground nursery */}
-          <button
-            onClick={() => {
-              sound.playChime('bell');
-              document.getElementById('playground-section')?.scrollIntoView({ behavior: 'smooth' });
-            }}
-            className="w-full mt-2 py-1.5 px-2 rounded-xl bg-[#E9D5FF] hover:bg-[#D8B4E5] text-[#581C87] border border-[#D8B4E5]/50 text-[10px] font-bold shadow-xs transition-all cursor-pointer flex items-center justify-center gap-1.5 hover:scale-102"
-          >
-            <span>🎡</span>
-            <span>Đến Khu Vui Chơi</span>
-          </button>
-
           {/* Pointer Triangle to the mascot */}
           <div className="absolute -bottom-2 left-7 w-3 h-3 bg-white border-b-2 border-r-2 border-[var(--dominant)] transform rotate-45"></div>
         </div>

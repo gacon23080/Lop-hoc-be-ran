@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { HeroCreator } from './components/HeroCreator';
 import { CharacterSection } from './components/CharacterSection';
-import { PlaygroundSection } from './components/PlaygroundSection';
 import { SecretInboxSection } from './components/SecretInboxSection';
 import { StickyFanWall } from './components/StickyFanWall';
 import { AdminModal } from './components/AdminModal';
@@ -23,7 +22,7 @@ import { useFirebaseData, firebaseActions } from './utils/firebaseHooks';
 
 export default function App() {
   // Sync Data via Firebase
-  const { characters, bulletinPosts, creatorProfile, inboxMessages, stickyNotes } = useFirebaseData();
+  const { characters, bulletinPosts, creatorProfile, inboxMessages, stickyNotes, setInboxMessages, setStickyNotes } = useFirebaseData();
   const [userLikes, setUserLikes] = useState<Record<string, boolean>>(() => storage.getUserLikes());
 
   // Music Player State
@@ -134,6 +133,8 @@ export default function App() {
 
   const handleDeleteInboxMessage = (msgId: string) => {
     firebaseActions.deleteInboxMessage(msgId);
+    storage.deleteInboxMessage(msgId);
+    setInboxMessages(prev => prev.filter(m => m.id !== msgId));
   };
 
   const handleSaveBulletinPosts = (newPosts: BulletinPost[]) => {
@@ -146,6 +147,8 @@ export default function App() {
 
   const handleDeleteStickyNote = (noteId: string) => {
     firebaseActions.deleteStickyNote(noteId);
+    storage.deleteStickyNote(noteId);
+    setStickyNotes(prev => prev.filter(n => n.id !== noteId));
   };
 
   const handleResetDefaults = () => {
@@ -203,12 +206,7 @@ export default function App() {
           onSelectRecipientForLetter={handleSelectRecipientForLetter}
         />
 
-        {/* 4. Interactive Daycare Mascot Playground ("Khu Vui Chơi & Nhà Trẻ Bé Rắn") */}
-        <PlaygroundSection
-          characters={characters}
-        />
-
-        {/* 5. Anonymous Secret Inbox ("Hộp Thư Ẩn Danh Lớp Mầm Non") */}
+        {/* 4. Anonymous Secret Inbox ("Hộp Thư Ẩn Danh Lớp Mầm Non") */}
         <SecretInboxSection
           messages={inboxMessages}
           characters={characters}

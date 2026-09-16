@@ -30,7 +30,17 @@ export const SecretInboxSection: React.FC<SecretInboxSectionProps> = ({
   const [content, setContent] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [activeMailboxTab, setActiveMailboxTab] = useState<'public' | 'private'>('public');
+  const [activeMailboxTab, setActiveMailboxTab] = useState<'public' | 'private' | 'all'>('public');
+  const [confirmDeleteMsgId, setConfirmDeleteMsgId] = useState<string | null>(null);
+  const [inboxToast, setInboxToast] = useState<string | null>(null);
+
+  const triggerDeleteMessage = (msgId: string) => {
+    sound.playChime('pop');
+    onDeleteMessage?.(msgId);
+    setConfirmDeleteMsgId(null);
+    setInboxToast('Đã xóa lá thư thành công!');
+    setTimeout(() => setInboxToast(null), 3000);
+  };
 
   useEffect(() => {
     if (initialRecipient) {
@@ -316,6 +326,21 @@ export const SecretInboxSection: React.FC<SecretInboxSectionProps> = ({
                     )}
                   </button>
 
+                  {/* Tab 3: Admin Master Mailbox (Only for logged-in Admin) */}
+                  {isAdminLoggedIn && (
+                    <button
+                      onClick={() => { sound.playChime('pop'); setActiveMailboxTab('all'); }}
+                      className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                        activeMailboxTab === 'all'
+                          ? 'bg-amber-600 text-white shadow-xs'
+                          : 'bg-amber-50 text-amber-900 hover:bg-amber-100 border border-amber-300'
+                      }`}
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Quản Lý Toàn Bộ Thư ({messages.length}) [Admin]</span>
+                    </button>
+                  )}
+
                 </div>
               </div>
 
@@ -341,18 +366,34 @@ export const SecretInboxSection: React.FC<SecretInboxSectionProps> = ({
                         >
                           {/* Admin Quick Delete */}
                           {isAdminLoggedIn && onDeleteMessage && (
-                            <button
-                              onClick={() => {
-                                if (window.confirm('Admin: Bạn có chắc muốn xóa lá thư công khai này?')) {
-                                  sound.playChime('pop');
-                                  onDeleteMessage(msg.id);
-                                }
-                              }}
-                              className="absolute top-3 right-3 p-1.5 rounded-lg bg-red-50 hover:bg-red-500 text-red-500 hover:text-white transition-all cursor-pointer"
-                              title="Xóa thư này (Quyền Admin)"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
+                            <div className="absolute top-3 right-3 z-20">
+                              {confirmDeleteMsgId === msg.id ? (
+                                <div className="flex items-center gap-1 bg-white p-1 rounded-xl shadow-lg border border-red-300 animate-scaleUp">
+                                  <button
+                                    onClick={() => triggerDeleteMessage(msg.id)}
+                                    className="px-2 py-1 rounded-lg bg-red-600 hover:bg-red-700 text-white text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1 shadow-xs"
+                                    title="Xác nhận xóa lá thư này"
+                                  >
+                                    <Trash2 className="w-3 h-3" />
+                                    <span>Xóa</span>
+                                  </button>
+                                  <button
+                                    onClick={() => setConfirmDeleteMsgId(null)}
+                                    className="px-2 py-1 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 text-[10px] font-semibold transition-all cursor-pointer"
+                                  >
+                                    Hủy
+                                  </button>
+                                </div>
+                              ) : (
+                                <button
+                                  onClick={() => setConfirmDeleteMsgId(msg.id)}
+                                  className="p-1.5 rounded-lg bg-red-50 hover:bg-red-500 text-red-500 hover:text-white transition-all cursor-pointer border border-red-200 shadow-2xs"
+                                  title="Xóa thư này (Quyền Admin)"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              )}
+                            </div>
                           )}
 
                           {/* Message Meta */}
@@ -448,18 +489,34 @@ export const SecretInboxSection: React.FC<SecretInboxSectionProps> = ({
                         >
                           {/* Delete Button (Owner or Admin) */}
                           {onDeleteMessage && (
-                            <button
-                              onClick={() => {
-                                if (window.confirm('Xóa lá thư riêng tư này?')) {
-                                  sound.playChime('pop');
-                                  onDeleteMessage(msg.id);
-                                }
-                              }}
-                              className="absolute top-3 right-3 p-1.5 rounded-lg bg-white/80 hover:bg-red-500 text-red-500 hover:text-white transition-all cursor-pointer border border-purple-200"
-                              title="Xóa thư riêng này"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
+                            <div className="absolute top-3 right-3 z-20">
+                              {confirmDeleteMsgId === msg.id ? (
+                                <div className="flex items-center gap-1 bg-white p-1 rounded-xl shadow-lg border border-red-300 animate-scaleUp">
+                                  <button
+                                    onClick={() => triggerDeleteMessage(msg.id)}
+                                    className="px-2 py-1 rounded-lg bg-red-600 hover:bg-red-700 text-white text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1 shadow-xs"
+                                    title="Xác nhận xóa thư này"
+                                  >
+                                    <Trash2 className="w-3 h-3" />
+                                    <span>Xóa</span>
+                                  </button>
+                                  <button
+                                    onClick={() => setConfirmDeleteMsgId(null)}
+                                    className="px-2 py-1 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 text-[10px] font-semibold transition-all cursor-pointer"
+                                  >
+                                    Hủy
+                                  </button>
+                                </div>
+                              ) : (
+                                <button
+                                  onClick={() => setConfirmDeleteMsgId(msg.id)}
+                                  className="p-1.5 rounded-lg bg-white/90 hover:bg-red-500 text-red-500 hover:text-white transition-all cursor-pointer border border-purple-200 shadow-2xs"
+                                  title="Xóa thư riêng này"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              )}
+                            </div>
                           )}
 
                           {/* Header */}
@@ -526,12 +583,117 @@ export const SecretInboxSection: React.FC<SecretInboxSectionProps> = ({
                 </div>
               )}
 
+              {/* TAB 3: ADMIN MASTER MAILBOX (SEES ALL LETTERS & DELETES INSTANTLY) */}
+              {activeMailboxTab === 'all' && isAdminLoggedIn && (
+                <div>
+                  <div className="mb-4 p-3 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-start gap-2">
+                    <span className="text-base">🛡️</span>
+                    <p className="leading-relaxed">
+                      <strong>Khu Vực Quản Trị Viên:</strong> Dưới đây là toàn bộ {messages.length} lá thư của người truy cập (gửi Tất cả, gửi Cô Giáo hoặc gửi riêng từng bé rắn). Bạn có thể kiểm duyệt và bấm nút <strong>Xóa</strong> để gỡ bỏ bất kỳ lá thư nào không phù hợp.
+                    </p>
+                  </div>
+
+                  {messages.length === 0 ? (
+                    <div className="text-center py-12 px-4 bg-amber-50/40 rounded-2xl border-2 border-dashed border-amber-300">
+                      <div className="text-3xl mb-2">📭</div>
+                      <p className="font-['Comfortaa'] text-sm font-bold text-amber-900 mb-1">
+                        Hiện chưa có lá thư nào trong hệ thống!
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4 max-h-[520px] overflow-y-auto pr-1">
+                      {messages.map((msg) => (
+                        <div
+                          key={msg.id}
+                          className="bg-white rounded-2xl p-4 border-2 border-amber-200/80 shadow-xs space-y-2.5 relative hover:border-amber-400 transition-all"
+                        >
+                          {/* Admin Quick Delete */}
+                          {onDeleteMessage && (
+                            <div className="absolute top-3 right-3 z-20">
+                              {confirmDeleteMsgId === msg.id ? (
+                                <div className="flex items-center gap-1 bg-white p-1 rounded-xl shadow-lg border border-red-300 animate-scaleUp">
+                                  <button
+                                    onClick={() => triggerDeleteMessage(msg.id)}
+                                    className="px-2 py-1 rounded-lg bg-red-600 hover:bg-red-700 text-white text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1 shadow-xs"
+                                    title="Xác nhận xóa thư này"
+                                  >
+                                    <Trash2 className="w-3 h-3" />
+                                    <span>Xóa</span>
+                                  </button>
+                                  <button
+                                    onClick={() => setConfirmDeleteMsgId(null)}
+                                    className="px-2 py-1 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 text-[10px] font-semibold transition-all cursor-pointer"
+                                  >
+                                    Hủy
+                                  </button>
+                                </div>
+                              ) : (
+                                <button
+                                  onClick={() => setConfirmDeleteMsgId(msg.id)}
+                                  className="p-1.5 rounded-lg bg-red-50 hover:bg-red-500 text-red-500 hover:text-white transition-all cursor-pointer border border-red-200 shadow-2xs"
+                                  title="Xóa thư này (Quyền Admin)"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              )}
+                            </div>
+                          )}
+
+                          {/* Header */}
+                          <div className="flex flex-wrap items-center gap-2 text-xs pr-10">
+                            <span className="font-bold text-gray-800 bg-gray-100 px-2.5 py-0.5 rounded-full border border-gray-200">
+                              {msg.category}
+                            </span>
+                            <span className="text-[11px] font-bold text-purple-800 bg-purple-100 px-2 py-0.5 rounded-full border border-purple-200">
+                              Gửi đến: {msg.recipient}
+                            </span>
+                            <span className="text-[10px] text-gray-500 ml-auto">
+                              {msg.timestamp}
+                            </span>
+                          </div>
+
+                          {/* Content */}
+                          <div className="bg-[var(--grad-end)] p-3 rounded-xl border border-[var(--dominant)]/40 text-xs sm:text-sm text-[var(--text-main)] leading-relaxed">
+                            <span className="font-bold text-[var(--text-main)] mr-1">
+                              {msg.senderNickname}:
+                            </span>
+                            <span>{msg.content}</span>
+                          </div>
+
+                          {/* Reply if available */}
+                          {msg.reply && (
+                            <div className="bg-purple-50 p-2.5 rounded-xl border border-purple-200 text-xs text-purple-950">
+                              <span className="font-bold text-purple-900 mr-1">💬 Đã trả lời:</span>
+                              <span className="italic">{msg.reply}</span>
+                            </div>
+                          )}
+
+                          <div className="flex items-center justify-between text-[10px] text-gray-500 pt-1">
+                            <span>Mã: #{msg.id.slice(-6)}</span>
+                            <span className="text-amber-700 font-medium">Trạng thái: {msg.status === 'approved' ? 'Đã duyệt' : 'Chờ duyệt'}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
             </div>
           </div>
 
         </div>
 
       </div>
+
+      {/* Inbox Toast Notification */}
+      {inboxToast && (
+        <div className="fixed bottom-6 right-6 z-50 px-4 py-2.5 rounded-2xl bg-gray-900/90 backdrop-blur-xs text-white text-xs font-bold shadow-xl flex items-center gap-2 animate-slideUp">
+          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+          <span>{inboxToast}</span>
+        </div>
+      )}
+
     </section>
   );
 };
