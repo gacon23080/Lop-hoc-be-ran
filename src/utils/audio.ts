@@ -13,7 +13,7 @@ class SoundEffects {
   }
 
   // Play a gentle toy bell chime (cute xylophone)
-  playChime(type: 'pop' | 'bell' | 'love' | 'paper' | 'admin' | 'munch' | 'splash' | 'snore' | 'levelUp' | 'toy' = 'pop') {
+  playChime(type: 'pop' | 'bell' | 'love' | 'paper' | 'admin' | 'munch' | 'splash' | 'snore' | 'levelUp' | 'toy' | 'door' | 'slide' = 'pop') {
     try {
       this.init();
       if (!this.ctx) return;
@@ -28,7 +28,60 @@ class SoundEffects {
       osc.connect(gain);
       gain.connect(this.ctx.destination);
 
-      if (type === 'pop') {
+      if (type === 'slide') {
+        // 1. Friction slide sound (cửa trượt trên thanh ray gỗ / nhôm)
+        const slideOsc = this.ctx.createOscillator();
+        const slideGain = this.ctx.createGain();
+        const filter = this.ctx.createBiquadFilter();
+
+        slideOsc.type = 'sawtooth';
+        slideOsc.frequency.setValueAtTime(130, now);
+        slideOsc.frequency.linearRampToValueAtTime(175, now + 0.42);
+
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(420, now);
+        filter.frequency.linearRampToValueAtTime(650, now + 0.42);
+
+        slideOsc.connect(filter);
+        filter.connect(slideGain);
+        slideGain.connect(this.ctx.destination);
+
+        slideGain.gain.setValueAtTime(0.01, now);
+        slideGain.gain.linearRampToValueAtTime(0.18, now + 0.1);
+        slideGain.gain.linearRampToValueAtTime(0.14, now + 0.35);
+        slideGain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+
+        slideOsc.start(now);
+        slideOsc.stop(now + 0.5);
+
+        // 2. The distinct Japanese door bumper clack ("XOẠCH!")
+        const clackTime = now + 0.44;
+        const clackOsc = this.ctx.createOscillator();
+        const clackGain = this.ctx.createGain();
+
+        clackOsc.type = 'triangle';
+        clackOsc.frequency.setValueAtTime(240, clackTime);
+        clackOsc.frequency.exponentialRampToValueAtTime(55, clackTime + 0.1);
+
+        clackOsc.connect(clackGain);
+        clackGain.connect(this.ctx.destination);
+
+        clackGain.gain.setValueAtTime(0.32, clackTime);
+        clackGain.gain.exponentialRampToValueAtTime(0.001, clackTime + 0.14);
+
+        clackOsc.start(clackTime);
+        clackOsc.stop(clackTime + 0.14);
+      } else if (type === 'door') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(523.25, now); // C5
+        osc.frequency.setValueAtTime(659.25, now + 0.15); // E5
+        osc.frequency.setValueAtTime(783.99, now + 0.3); // G5
+        osc.frequency.setValueAtTime(1046.50, now + 0.45); // C6
+        gain.gain.setValueAtTime(0.28, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+        osc.start(now);
+        osc.stop(now + 0.9);
+      } else if (type === 'pop') {
         osc.type = 'sine';
         osc.frequency.setValueAtTime(587.33, now); // D5
         osc.frequency.exponentialRampToValueAtTime(880, now + 0.12);

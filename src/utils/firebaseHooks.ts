@@ -3,6 +3,7 @@ import { collection, doc, onSnapshot, setDoc, addDoc, updateDoc, deleteDoc, getD
 import { db, handleFirestoreError, OperationType } from './firebase';
 import { Character, BulletinPost, CreatorProfile, InboxMessage, StickyNote } from '../types';
 import { storage } from './storage';
+import { INITIAL_CHARACTERS } from '../data/initialData';
 
 export function useFirebaseData() {
   const [characters, setCharacters] = useState<Character[]>(() => storage.getCharacters());
@@ -17,9 +18,19 @@ export function useFirebaseData() {
     // 1. Characters
     const unsubChars = onSnapshot(collection(db, 'characters'), (snapshot) => {
       const data = snapshot.docs.map(doc => doc.data() as Character);
-      if(snapshot.docs.length > 0 || isFirebaseLoaded) {
+      if (data.length > 0) {
         setCharacters(data);
         storage.saveCharacters(data);
+      } else {
+        // Fallback / Auto-seed if characters collection is empty
+        const currentSaved = storage.getCharacters();
+        const fallbackList = currentSaved.length > 0 ? currentSaved : INITIAL_CHARACTERS;
+        setCharacters(fallbackList);
+        storage.saveCharacters(fallbackList);
+        // Seed to Firestore in background
+        fallbackList.forEach((c) => {
+          setDoc(doc(db, 'characters', c.id), c).catch(() => {});
+        });
       }
     }, (err) => handleFirestoreError(err, OperationType.LIST, 'characters'));
 

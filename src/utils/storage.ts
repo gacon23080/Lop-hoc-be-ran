@@ -28,42 +28,94 @@ const KEYS = {
   SELECTED_PET_ID: 'mamnon_ran_selected_pet_id',
 };
 
+// In-memory fallback in case localStorage quota is exceeded or unavailable
+const memoryFallback: Record<string, string> = {};
+
+// Safe setItem that handles QuotaExceededError by clearing old caches and falling back to memory
+function safeSetItem(key: string, value: string): void {
+  try {
+    localStorage.setItem(key, value);
+    delete memoryFallback[key];
+  } catch (e: any) {
+    const isQuotaError = 
+      e?.name === 'QuotaExceededError' ||
+      e?.name === 'NS_ERROR_DOM_QUOTA_REACHED' ||
+      e?.code === 22 ||
+      e?.number === -2147024882 ||
+      String(e).toLowerCase().includes('quota');
+
+    if (isQuotaError) {
+      try {
+        // Prune non-essential or obsolete items to free space
+        const cleanupPrefixes = ['mamnon_ran_pet_care_', 'mamnon_ran_characters_v1', 'temp_'];
+        const keysToRemove: string[] = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k && cleanupPrefixes.some(p => k.startsWith(p))) {
+            keysToRemove.push(k);
+          }
+        }
+        keysToRemove.forEach(k => localStorage.removeItem(k));
+
+        // Try setting again after cleanup
+        localStorage.setItem(key, value);
+        delete memoryFallback[key];
+        return;
+      } catch {
+        // Still exceeded quota, fallback gracefully to in-memory store
+      }
+    }
+
+    // Graceful in-memory fallback without throwing or triggering console.error
+    memoryFallback[key] = value;
+    console.warn(`[storage] LocalStorage quota reached for ${key}. Falling back to memory.`);
+  }
+}
+
+function safeGetItem(key: string): string | null {
+  try {
+    const item = localStorage.getItem(key);
+    if (item !== null) return item;
+    return memoryFallback[key] || null;
+  } catch {
+    return memoryFallback[key] || null;
+  }
+}
+
 export const storage = {
   getCharacters: (): Character[] => {
     try {
-      const data = localStorage.getItem(KEYS.CHARACTERS);
-      return data ? JSON.parse(data) : INITIAL_CHARACTERS;
+      const data = safeGetItem(KEYS.CHARACTERS);
+      if (data) {
+        const parsed = JSON.parse(data);
+        if (Array.isArray(parsed) && parsed.length > 0 && parsed.some((c: any) => c.name?.includes('Khoai Môn') || c.id === 'char-khoaimon')) {
+          return parsed;
+        }
+      }
+      return INITIAL_CHARACTERS;
     } catch {
       return INITIAL_CHARACTERS;
     }
   },
   saveCharacters: (characters: Character[]) => {
-    try {
-      localStorage.setItem(KEYS.CHARACTERS, JSON.stringify(characters));
-    } catch (e) {
-      console.error('Failed to save characters to localStorage', e);
-    }
+    safeSetItem(KEYS.CHARACTERS, JSON.stringify(characters));
   },
 
   getBulletinPosts: (): BulletinPost[] => {
     try {
-      const data = localStorage.getItem(KEYS.BULLETIN);
+      const data = safeGetItem(KEYS.BULLETIN);
       return data ? JSON.parse(data) : INITIAL_BULLETIN_POSTS;
     } catch {
       return INITIAL_BULLETIN_POSTS;
     }
   },
   saveBulletinPosts: (posts: BulletinPost[]) => {
-    try {
-      localStorage.setItem(KEYS.BULLETIN, JSON.stringify(posts));
-    } catch (e) {
-      console.error('Failed to save bulletin posts to localStorage', e);
-    }
+    safeSetItem(KEYS.BULLETIN, JSON.stringify(posts));
   },
 
   getCreatorProfile: (): CreatorProfile => {
     try {
-      const data = localStorage.getItem(KEYS.PROFILE);
+      const data = safeGetItem(KEYS.PROFILE);
       if (data) {
         const parsed: CreatorProfile = JSON.parse(data);
         if (!parsed.avatarUrl || parsed.avatarUrl.includes('unsplash.com/photo-1534528741775-53994a69daeb')) {
@@ -79,16 +131,12 @@ export const storage = {
     }
   },
   saveCreatorProfile: (profile: CreatorProfile) => {
-    try {
-      localStorage.setItem(KEYS.PROFILE, JSON.stringify(profile));
-    } catch (e) {
-      console.error('Failed to save creator profile to localStorage', e);
-    }
+    safeSetItem(KEYS.PROFILE, JSON.stringify(profile));
   },
 
   getInboxMessages: (): InboxMessage[] => {
     try {
-      const data = localStorage.getItem(KEYS.INBOX);
+      const data = safeGetItem(KEYS.INBOX);
       if (!data) return INITIAL_INBOX_MESSAGES;
       const parsed: InboxMessage[] = JSON.parse(data);
       // Filter out legacy hardcoded sample messages
@@ -99,24 +147,20 @@ export const storage = {
     }
   },
   saveInboxMessages: (messages: InboxMessage[]) => {
-    try {
-      localStorage.setItem(KEYS.INBOX, JSON.stringify(messages));
-    } catch (e) {
-      console.error('Failed to save inbox messages to localStorage', e);
-    }
+    safeSetItem(KEYS.INBOX, JSON.stringify(messages));
   },
   deleteInboxMessage: (msgId: string) => {
     try {
       const current = storage.getInboxMessages().filter(m => m.id !== msgId);
       storage.saveInboxMessages(current);
-    } catch (e) {
-      console.error('Failed to delete inbox message from localStorage', e);
+    } catch {
+      // Ignored
     }
   },
 
   getStickyNotes: (): StickyNote[] => {
     try {
-      const data = localStorage.getItem(KEYS.STICKY);
+      const data = safeGetItem(KEYS.STICKY);
       if (!data) return INITIAL_STICKY_NOTES;
       const parsed: StickyNote[] = JSON.parse(data);
       // Filter out legacy hardcoded sample notes
@@ -127,43 +171,35 @@ export const storage = {
     }
   },
   saveStickyNotes: (notes: StickyNote[]) => {
-    try {
-      localStorage.setItem(KEYS.STICKY, JSON.stringify(notes));
-    } catch (e) {
-      console.error('Failed to save sticky notes to localStorage', e);
-    }
+    safeSetItem(KEYS.STICKY, JSON.stringify(notes));
   },
   deleteStickyNote: (noteId: string) => {
     try {
       const current = storage.getStickyNotes().filter(n => n.id !== noteId);
       storage.saveStickyNotes(current);
-    } catch (e) {
-      console.error('Failed to delete sticky note from localStorage', e);
+    } catch {
+      // Ignored
     }
   },
 
   getUserLikes: (): Record<string, boolean> => {
     try {
-      const data = localStorage.getItem(KEYS.USER_LIKES);
+      const data = safeGetItem(KEYS.USER_LIKES);
       return data ? JSON.parse(data) : {};
     } catch {
       return {};
     }
   },
   saveUserLikes: (likes: Record<string, boolean>) => {
-    try {
-      localStorage.setItem(KEYS.USER_LIKES, JSON.stringify(likes));
-    } catch (e) {
-      console.error('Failed to save user likes to localStorage', e);
-    }
+    safeSetItem(KEYS.USER_LIKES, JSON.stringify(likes));
   },
 
   getVisitorId: (): string => {
     try {
-      let id = localStorage.getItem(KEYS.VISITOR_ID);
+      let id = safeGetItem(KEYS.VISITOR_ID);
       if (!id) {
         id = 'visitor_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
-        localStorage.setItem(KEYS.VISITOR_ID, id);
+        safeSetItem(KEYS.VISITOR_ID, id);
       }
       return id;
     } catch {
@@ -173,7 +209,7 @@ export const storage = {
 
   getMySentLetterIds: (): string[] => {
     try {
-      const data = localStorage.getItem(KEYS.MY_SENT_LETTERS);
+      const data = safeGetItem(KEYS.MY_SENT_LETTERS);
       return data ? JSON.parse(data) : [];
     } catch {
       return [];
@@ -185,10 +221,10 @@ export const storage = {
       const current = storage.getMySentLetterIds();
       if (!current.includes(msgId)) {
         current.push(msgId);
-        localStorage.setItem(KEYS.MY_SENT_LETTERS, JSON.stringify(current));
+        safeSetItem(KEYS.MY_SENT_LETTERS, JSON.stringify(current));
       }
-    } catch (e) {
-      console.error('Failed to save sent letter id', e);
+    } catch {
+      // Ignored
     }
   },
 
@@ -214,7 +250,7 @@ export const storage = {
     };
 
     try {
-      const data = localStorage.getItem(KEYS.PET_CARE_PREFIX + petId);
+      const data = safeGetItem(KEYS.PET_CARE_PREFIX + petId);
       if (!data) return defaultState;
       const parsed: PetCareState = JSON.parse(data);
 
@@ -262,41 +298,29 @@ export const storage = {
   },
 
   savePetCareState: (state: PetCareState) => {
-    try {
-      localStorage.setItem(KEYS.PET_CARE_PREFIX + state.petId, JSON.stringify({
-        ...state,
-        lastUpdated: Date.now()
-      }));
-    } catch (e) {
-      console.error('Failed to save pet care state', e);
-    }
+    safeSetItem(KEYS.PET_CARE_PREFIX + state.petId, JSON.stringify({
+      ...state,
+      lastUpdated: Date.now()
+    }));
   },
 
   getSelectedPetId: (): string => {
     try {
-      return localStorage.getItem(KEYS.SELECTED_PET_ID) || 'mascot-tim';
+      return safeGetItem(KEYS.SELECTED_PET_ID) || 'mascot-tim';
     } catch {
       return 'mascot-tim';
     }
   },
 
   saveSelectedPetId: (petId: string) => {
-    try {
-      localStorage.setItem(KEYS.SELECTED_PET_ID, petId);
-    } catch (e) {
-      console.error('Failed to save selected pet id', e);
-    }
+    safeSetItem(KEYS.SELECTED_PET_ID, petId);
   },
 
   resetAllToDefault: () => {
-    try {
-      localStorage.setItem(KEYS.CHARACTERS, JSON.stringify(INITIAL_CHARACTERS));
-      localStorage.setItem(KEYS.BULLETIN, JSON.stringify(INITIAL_BULLETIN_POSTS));
-      localStorage.setItem(KEYS.PROFILE, JSON.stringify(INITIAL_CREATOR_PROFILE));
-      localStorage.setItem(KEYS.INBOX, JSON.stringify(INITIAL_INBOX_MESSAGES));
-      localStorage.setItem(KEYS.STICKY, JSON.stringify(INITIAL_STICKY_NOTES));
-    } catch (e) {
-      console.error('Failed to reset data', e);
-    }
+    safeSetItem(KEYS.CHARACTERS, JSON.stringify(INITIAL_CHARACTERS));
+    safeSetItem(KEYS.BULLETIN, JSON.stringify(INITIAL_BULLETIN_POSTS));
+    safeSetItem(KEYS.PROFILE, JSON.stringify(INITIAL_CREATOR_PROFILE));
+    safeSetItem(KEYS.INBOX, JSON.stringify(INITIAL_INBOX_MESSAGES));
+    safeSetItem(KEYS.STICKY, JSON.stringify(INITIAL_STICKY_NOTES));
   }
 };

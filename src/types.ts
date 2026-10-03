@@ -3,7 +3,7 @@ export interface Character {
   name: string;
   nickname: string;
   title: string; // e.g. "Lớp Trưởng Gương Mẫu", "Bé Út Nghịch Ngợm"
-  gender: 'Bé Trai' | 'Bé Gái' | 'Bé Rồng Bí Ẩn';
+  gender: 'Bé Trai' | 'Bé Gái' | 'Bé Rồng Bí Ẩn' | 'Phi Giới Tính';
   age: string;
   avatarUrl: string;
   youtubeMusicUrl?: string; // Link nhạc YouTube (không bắt buộc, ấn vào sẽ mở nhạc)

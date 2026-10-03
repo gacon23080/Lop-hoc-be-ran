@@ -71,7 +71,11 @@ export const CuteSnakeMascot: React.FC = () => {
       });
       const newCount = patsCount + 1;
       setPatsCount(newCount);
-      localStorage.setItem('snake_mascot_pats_v3', newCount.toString());
+      try {
+        localStorage.setItem('snake_mascot_pats_v3', newCount.toString());
+      } catch {
+        // Ignore quota
+      }
     }
 
     setTimeout(() => {

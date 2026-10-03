@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Heart, Sparkles, Shield, Users, Music, ExternalLink, Award, Baby, Cookie, Trash2, Send } from 'lucide-react';
 import { Character, InboxMessage } from '../types';
+import { CharacterAvatar } from './CharacterAvatar';
 import { sound } from '../utils/audio';
 
 interface CharacterModalProps {
@@ -87,12 +88,11 @@ export const CharacterModal: React.FC<CharacterModalProps> = ({
           {/* Main Hero & Actions */}
           <div className="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
             <div className="relative shrink-0">
-              <div className="w-36 h-36 sm:w-40 sm:h-40 rounded-3xl p-1.5 bg-gradient-to-tr from-[var(--dominant)] to-[var(--accent)] shadow-lg shadow-[var(--dominant)]/20">
-                <img
-                  src={character.avatarUrl}
-                  alt={character.name}
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover rounded-2xl bg-white"
+              <div className="w-36 h-36 sm:w-40 sm:h-40 rounded-3xl p-1.5 bg-gradient-to-tr from-[var(--dominant)] to-[var(--accent)] shadow-lg shadow-[var(--dominant)]/20 overflow-hidden">
+                <CharacterAvatar
+                  avatarUrl={character.avatarUrl}
+                  name={character.name}
+                  className="w-full h-full rounded-2xl"
                 />
               </div>
               <button

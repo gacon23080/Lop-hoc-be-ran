@@ -6,9 +6,10 @@ import { SecretInboxSection } from './components/SecretInboxSection';
 import { StickyFanWall } from './components/StickyFanWall';
 import { AdminModal } from './components/AdminModal';
 import { Footer } from './components/Footer';
-import { YouTubeMusicPlayer } from './components/YouTubeMusicPlayer';
+import { CornerMusicPlayer } from './components/CornerMusicPlayer';
 import { CuteSnakeMascot } from './components/CuteSnakeMascot';
 import { CuteClickSparkles } from './components/CuteClickSparkles';
+import { DynamicAnimatedBackground } from './components/DynamicAnimatedBackground';
 
 import {
   Character,
@@ -172,60 +173,72 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-preschool-pattern flex flex-col text-[var(--text-main)]">
+    <div className="min-h-screen relative flex flex-col text-[var(--text-main)] overflow-x-hidden">
       
-      {/* 1. Sticky / Glassmorphic Navigation Bar */}
-      <Navbar
-        onOpenAdmin={() => setIsAdminModalOpen(true)}
-        isAdminLoggedIn={isAdminLoggedIn}
-        totalStudents={creatorProfile?.totalStudents || characters.length || 0}
-      />
+      {/* 0. Fullscreen Living Dynamic Animated Background (Flowing Pastel Sky + Ambient Floating Orbs + Drifting Pink Petals) */}
+      <DynamicAnimatedBackground />
 
-      {/* Main Content Sections */}
-      <main className="flex-1">
-        {/* 2. Creator Profile & Bulletin Board Section */}
-        <HeroCreator
-          profile={creatorProfile}
-          bulletinPosts={bulletinPosts}
-          onExploreCharacters={() => scrollTo('characters-section')}
-          onOpenInbox={() => scrollTo('inbox-section')}
-          onOpenSticky={() => scrollTo('sticky-section')}
-        />
-
-        {/* 3. Character Showcase & Tagging System ("Bé Rắn Của Lớp") */}
-        <CharacterSection
-          characters={characters}
-          onToggleLike={handleToggleCharacterLike}
-          userLikes={userLikes}
-          onPlayMusic={(char) => setActiveMusicCharacter(char)}
+      {/* Main interactive page content (relative z-10 ensures elements are above background) */}
+      <div className="relative z-10 flex flex-col min-h-screen">
+        {/* 1. Sticky / Glassmorphic Navigation Bar */}
+        <Navbar
+          onOpenAdmin={() => setIsAdminModalOpen(true)}
+          isAdminLoggedIn={isAdminLoggedIn}
           totalStudents={creatorProfile?.totalStudents || characters.length || 0}
-          inboxMessages={inboxMessages}
-          isAdminLoggedIn={isAdminLoggedIn}
-          onDeleteInboxMessage={handleDeleteInboxMessage}
-          onLikeInboxMessage={handleLikeInboxMessage}
-          onSelectRecipientForLetter={handleSelectRecipientForLetter}
         />
 
-        {/* 4. Anonymous Secret Inbox ("Hộp Thư Ẩn Danh Lớp Mầm Non") */}
-        <SecretInboxSection
-          messages={inboxMessages}
-          characters={characters}
-          onSubmitMessage={handleAddInboxMessage}
-          onLikeMessage={handleLikeInboxMessage}
-          isAdminLoggedIn={isAdminLoggedIn}
-          onDeleteMessage={handleDeleteInboxMessage}
-          initialRecipient={selectedInboxRecipient}
-        />
+        {/* Main Content Sections */}
+        <main className="flex-1">
+          {/* 2. Creator Profile & Bulletin Board Section */}
+          <HeroCreator
+            profile={creatorProfile}
+            bulletinPosts={bulletinPosts}
+            onExploreCharacters={() => scrollTo('characters-section')}
+            onOpenInbox={() => scrollTo('inbox-section')}
+            onOpenSticky={() => scrollTo('sticky-section')}
+          />
 
-        {/* 5. Interactive Fan Wall ("Bức Tường Sticky Note") */}
-        <StickyFanWall
-          notes={stickyNotes}
-          onAddNote={handleAddStickyNote}
-          onLikeNote={handleLikeStickyNote}
-          isAdminLoggedIn={isAdminLoggedIn}
-          onDeleteNote={handleDeleteStickyNote}
+          {/* 3. Character Showcase & Tagging System ("Bé Rắn Của Lớp") */}
+          <CharacterSection
+            characters={characters}
+            onToggleLike={handleToggleCharacterLike}
+            userLikes={userLikes}
+            onPlayMusic={(char) => setActiveMusicCharacter(char)}
+            totalStudents={creatorProfile?.totalStudents || characters.length || 0}
+            inboxMessages={inboxMessages}
+            isAdminLoggedIn={isAdminLoggedIn}
+            onDeleteInboxMessage={handleDeleteInboxMessage}
+            onLikeInboxMessage={handleLikeInboxMessage}
+            onSelectRecipientForLetter={handleSelectRecipientForLetter}
+          />
+
+          {/* 4. Anonymous Secret Inbox ("Hộp Thư Ẩn Danh Lớp Mầm Non") */}
+          <SecretInboxSection
+            messages={inboxMessages}
+            characters={characters}
+            onSubmitMessage={handleAddInboxMessage}
+            onLikeMessage={handleLikeInboxMessage}
+            isAdminLoggedIn={isAdminLoggedIn}
+            onDeleteMessage={handleDeleteInboxMessage}
+            initialRecipient={selectedInboxRecipient}
+          />
+
+          {/* 5. Interactive Fan Wall ("Bức Tường Sticky Note") */}
+          <StickyFanWall
+            notes={stickyNotes}
+            onAddNote={handleAddStickyNote}
+            onLikeNote={handleLikeStickyNote}
+            isAdminLoggedIn={isAdminLoggedIn}
+            onDeleteNote={handleDeleteStickyNote}
+          />
+        </main>
+
+        {/* Footer */}
+        <Footer
+          facebookUrl={creatorProfile?.facebookUrl || ''}
+          onOpenAdmin={() => setIsAdminModalOpen(true)}
         />
-      </main>
+      </div>
 
       {/* 6. Secured Admin Dashboard (Password Protected with khanhvi23082010) */}
       <AdminModal
@@ -249,16 +262,11 @@ export default function App() {
         onResetDefaults={handleResetDefaults}
       />
 
-      {/* Footer */}
-      <Footer
-        facebookUrl={creatorProfile?.facebookUrl || ''}
-        onOpenAdmin={() => setIsAdminModalOpen(true)}
-      />
-
-      {/* Floating Interactive YouTube Music Player */}
-      <YouTubeMusicPlayer
+      {/* Unified Corner Music Player (Audio-only in corner, no frame shown, auto-switches from web music to character music) */}
+      <CornerMusicPlayer
         activeCharacter={activeMusicCharacter}
-        onClose={() => setActiveMusicCharacter(null)}
+        onStopCharacterMusic={() => setActiveMusicCharacter(null)}
+        onPlayCharacterMusic={(char) => setActiveMusicCharacter(char)}
       />
 
       {/* Floating Interactive Baby Snake Mascot */}

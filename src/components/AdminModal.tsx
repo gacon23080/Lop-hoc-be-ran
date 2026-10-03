@@ -157,34 +157,68 @@ export const AdminModal: React.FC<AdminModalProps> = ({
     setIsCreatingChar(true);
   };
 
+  // Helper: compress uploaded images before storing to prevent localStorage quota exhaustion
+  const compressImageFile = (file: File): Promise<string> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (loadEvt) => {
+        const dataUrl = loadEvt.target?.result as string;
+        if (!dataUrl) return resolve('');
+        const img = new Image();
+        img.onload = () => {
+          const maxDim = 320;
+          let width = img.width;
+          let height = img.height;
+          if (width > height) {
+            if (width > maxDim) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            }
+          } else {
+            if (height > maxDim) {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', 0.8));
+          } else {
+            resolve(dataUrl);
+          }
+        };
+        img.onerror = () => resolve(dataUrl);
+        img.src = dataUrl;
+      };
+      reader.onerror = () => resolve('');
+      reader.readAsDataURL(file);
+    });
+  };
+
   // Upload character image from local machine
-  const handleCharImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCharImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !editingChar) return;
-
-    const reader = new FileReader();
-    reader.onload = (loadEvt) => {
-      if (typeof loadEvt.target?.result === 'string') {
-        setEditingChar({ ...editingChar, avatarUrl: loadEvt.target.result });
-        showToast('Đã tải ảnh lên thành công!');
-      }
-    };
-    reader.readAsDataURL(file);
+    const compressed = await compressImageFile(file);
+    if (compressed) {
+      setEditingChar({ ...editingChar, avatarUrl: compressed });
+      showToast('Đã tải và tối ưu ảnh thành công!');
+    }
   };
 
   // Upload profile image from local machine
-  const handleProfileImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProfileImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (loadEvt) => {
-      if (typeof loadEvt.target?.result === 'string') {
-        setDraftProfile({ ...draftProfile, avatarUrl: loadEvt.target.result });
-        showToast('Đã cập nhật ảnh đại diện cô giáo!');
-      }
-    };
-    reader.readAsDataURL(file);
+    const compressed = await compressImageFile(file);
+    if (compressed) {
+      setDraftProfile({ ...draftProfile, avatarUrl: compressed });
+      showToast('Đã cập nhật và tối ưu ảnh đại diện!');
+    }
   };
 
   const handleSaveCharSubmit = (e: React.FormEvent) => {
@@ -1205,6 +1239,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                       <option value="Bé Trai">Bé Trai</option>
                       <option value="Bé Gái">Bé Gái</option>
                       <option value="Bé Rồng Bí Ẩn">Bé Rồng Bí Ẩn</option>
+                      <option value="Phi Giới Tính">Phi Giới Tính</option>
                     </select>
                     <input
                       type="text"

@@ -84,6 +84,80 @@
   }
 }
 
+@keyframes petalFall {
+  0% {
+    transform: translate3d(0, -60px, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.85;
+  }
+  85% {
+    opacity: 0.75;
+  }
+  100% {
+    transform: translate3d(var(--petal-drift, 80px), 105vh, 0) rotate(var(--petal-rotate, 360deg));
+    opacity: 0;
+  }
+}
+
+@keyframes petalSway {
+  0% {
+    transform: translateX(-18px) rotate(-15deg);
+  }
+  50% {
+    transform: translateX(18px) rotate(15deg);
+  }
+  100% {
+    transform: translateX(-18px) rotate(-15deg);
+  }
+}
+
+@keyframes dynamicGradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes orbDrift1 {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(70px, -50px) scale(1.15);
+  }
+  66% {
+    transform: translate(-50px, 40px) scale(0.92);
+  }
+}
+
+@keyframes orbDrift2 {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(-80px, 60px) scale(0.88);
+  }
+  66% {
+    transform: translate(60px, -35px) scale(1.14);
+  }
+}
+
+@keyframes orbDrift3 {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  50% {
+    transform: translate(50px, 70px) scale(1.12);
+  }
+}
+
 .animate-float { animation: float 4s ease-in-out infinite; }
 .animate-float-slow { animation: float 7s ease-in-out infinite; }
 .animate-float-rev { animation: float-reverse 5s ease-in-out infinite; }
@@ -93,17 +167,6 @@
 .animate-heart-beat { animation: heart-beat 1.8s ease-in-out infinite; }
 .animate-spin-slow { animation: cute-spin-slow 20s linear infinite; }
 .animate-float-fade { animation: floatUpAndFade 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-
-/* Background pattern with gentle polka dots and soft pastel clouds using user's exact palette */
-.bg-preschool-pattern {
-  background-color: var(--grad-end);
-  background-image: 
-    radial-gradient(var(--dominant) 1.5px, transparent 1.5px),
-    radial-gradient(var(--accent) 1.5px, transparent 1.5px),
-    linear-gradient(135deg, var(--grad-start) 0%, var(--grad-end) 100%);
-  background-size: 32px 32px, 32px 32px, 100% 100%;
-  background-position: 0 0, 16px 16px, 0 0;
-}
 
 /* Cute washi tape styling for preschool cards with user requested pastel purple palette */
 .washi-tape {
